@@ -30,7 +30,6 @@
       }
       { sh = "wl-paste --watch cliphist store &"; }
       { sh = "wl-clip-persist --clipboard regular &"; }
-      { sh = "xrdb -merge ~/.Xresources"; }
     ];
 
   };

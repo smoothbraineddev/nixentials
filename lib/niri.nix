@@ -48,16 +48,6 @@ let
           "lock-session"
         ];
       };
-      "Ctrl+Alt+Delete" = {
-        hotkey-overlay.title = "Task Manager";
-        action.spawn = [
-          "dms"
-          "ipc"
-          "call"
-          "processlist"
-          "focusOrToggle"
-        ];
-      };
     };
 
     # Window Management

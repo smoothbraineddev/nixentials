@@ -86,8 +86,6 @@ in
   xdg.configFile."gtk-3.0/settings.ini".force = true;
   xdg.configFile."gtk-4.0/settings.ini".force = true;
 
-  # Cursor theme: sets ~/.icons/default (for X11/Steam), xresources, and GTK cursor
-  # xrdb -merge ~/.Xresources is still called by niri on startup to load into Xwayland
   home.pointerCursor = {
     enable = true;
     name = "Bibata-Modern-Classic";
