@@ -1,0 +1,113 @@
+{ ... }:
+let
+  c = import ../lib/colors.nix;
+
+  dmsCustomTheme = builtins.toJSON {
+    dark = {
+      primary = c.md3.primary;
+      primaryText = c.md3.on_primary;
+      primaryContainer = c.md3.primary_container;
+      primaryContainerText = c.md3.on_primary_container;
+      secondary = c.md3.secondary;
+      secondaryText = c.md3.on_secondary;
+      secondaryContainer = c.md3.secondary_container;
+      secondaryContainerText = c.md3.on_secondary_container;
+      tertiary = c.md3.tertiary;
+      tertiaryText = c.md3.on_tertiary;
+      tertiaryContainer = c.md3.tertiary_container;
+      tertiaryContainerText = c.md3.on_tertiary_container;
+      error = c.md3.error;
+      errorText = c.md3.on_error;
+      errorContainer = c.md3.error_container;
+      errorContainerText = c.md3.on_error_container;
+      surface = c.md3.surface;
+      surfaceText = c.md3.on_surface;
+      surfaceVariant = c.md3.surface_variant;
+      surfaceVariantText = c.md3.on_surface_variant;
+      surfaceTint = c.md3.surface_tint;
+      background = c.md3.background;
+      backgroundText = c.md3.on_background;
+      outline = c.md3.outline;
+      outlineVariant = c.md3.outline_variant;
+      surfaceContainer = c.md3.surface_container;
+      surfaceContainerHigh = c.md3.surface_container_high;
+      surfaceContainerHighest = c.md3.surface_container_highest;
+      surfaceContainerLow = c.md3.surface_container_low;
+      surfaceContainerLowest = c.md3.surface_container_lowest;
+      surfaceBright = c.md3.surface_bright;
+      surfaceDim = c.md3.surface_dim;
+      inverseSurface = c.md3.inverse_surface;
+      inverseOnSurface = c.md3.inverse_on_surface;
+      inversePrimary = c.md3.inverse_primary;
+      scrim = c.md3.scrim;
+      shadow = c.md3.shadow;
+      primaryFixed = c.md3.primary_fixed;
+      primaryFixedDim = c.md3.primary_fixed_dim;
+      onPrimaryFixed = c.md3.on_primary_fixed;
+      onPrimaryFixedVariant = c.md3.on_primary_fixed_variant;
+      secondaryFixed = c.md3.secondary_fixed;
+      secondaryFixedDim = c.md3.secondary_fixed_dim;
+      onSecondaryFixed = c.md3.on_secondary_fixed;
+      onSecondaryFixedVariant = c.md3.on_secondary_fixed_variant;
+      tertiaryFixed = c.md3.tertiary_fixed;
+      tertiaryFixedDim = c.md3.tertiary_fixed_dim;
+      onTertiaryFixed = c.md3.on_tertiary_fixed;
+      onTertiaryFixedVariant = c.md3.on_tertiary_fixed_variant;
+    };
+    light = {
+      primary = c.md3.primary;
+      primaryText = c.md3.on_primary;
+      primaryContainer = c.md3.primary_container;
+      primaryContainerText = c.md3.on_primary_container;
+      secondary = c.md3.secondary;
+      secondaryText = c.md3.on_secondary;
+      secondaryContainer = c.md3.secondary_container;
+      secondaryContainerText = c.md3.on_secondary_container;
+      tertiary = c.md3.tertiary;
+      tertiaryText = c.md3.on_tertiary;
+      tertiaryContainer = c.md3.tertiary_container;
+      tertiaryContainerText = c.md3.on_tertiary_container;
+      error = c.md3.error;
+      errorText = c.md3.on_error;
+      errorContainer = c.md3.error_container;
+      errorContainerText = c.md3.on_error_container;
+      surface = c.md3.surface;
+      surfaceText = c.md3.on_surface;
+      surfaceVariant = c.md3.surface_variant;
+      surfaceVariantText = c.md3.on_surface_variant;
+      surfaceTint = c.md3.surface_tint;
+      background = c.md3.background;
+      backgroundText = c.md3.on_background;
+      outline = c.md3.outline;
+      outlineVariant = c.md3.outline_variant;
+      surfaceContainer = c.md3.surface_container;
+      surfaceContainerHigh = c.md3.surface_container_high;
+      surfaceContainerHighest = c.md3.surface_container_highest;
+      surfaceContainerLow = c.md3.surface_container_low;
+      surfaceContainerLowest = c.md3.surface_container_lowest;
+      surfaceBright = c.md3.surface_bright;
+      surfaceDim = c.md3.surface_dim;
+      inverseSurface = c.md3.inverse_surface;
+      inverseOnSurface = c.md3.inverse_on_surface;
+      inversePrimary = c.md3.inverse_primary;
+      scrim = c.md3.scrim;
+      shadow = c.md3.shadow;
+      primaryFixed = c.md3.primary_fixed;
+      primaryFixedDim = c.md3.primary_fixed_dim;
+      onPrimaryFixed = c.md3.on_primary_fixed;
+      onPrimaryFixedVariant = c.md3.on_primary_fixed_variant;
+      secondaryFixed = c.md3.secondary_fixed;
+      secondaryFixedDim = c.md3.secondary_fixed_dim;
+      onSecondaryFixed = c.md3.on_secondary_fixed;
+      onSecondaryFixedVariant = c.md3.on_secondary_fixed_variant;
+      tertiaryFixed = c.md3.tertiary_fixed;
+      tertiaryFixedDim = c.md3.tertiary_fixed_dim;
+      onTertiaryFixed = c.md3.on_tertiary_fixed;
+      onTertiaryFixedVariant = c.md3.on_tertiary_fixed_variant;
+    };
+  };
+
+in
+{
+  xdg.configFile."DankMaterialShell/smoothbrained-theme.json".text = dmsCustomTheme;
+}
