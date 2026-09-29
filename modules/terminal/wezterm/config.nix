@@ -1,5 +1,7 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
+  home.packages = [ pkgs.meslo-lgs-nf ];
+
   programs.wezterm = {
     enable = true;
     extraConfig = lib.mkMerge [
