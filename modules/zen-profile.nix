@@ -13,6 +13,8 @@ let
     @import url("file://${config.xdg.configHome}/zen/customTheme.css");
   '';
 
+  # To update the mods, take rev and hash from:
+  #   nix flake prefetch --json github:zen-browser/theme-store | jq '{rev: .locked.rev, hash}'
   themeStore = pkgs.fetchFromGitHub {
     owner = "zen-browser";
     repo = "theme-store";
