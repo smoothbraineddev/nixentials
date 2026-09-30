@@ -28,6 +28,11 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.niri.cornerRadius` | `r -> { top-left; top-right; bottom-right; bottom-left; }`. All four corners are required by `geometry-corner-radius` |
 | `lib.niri.binds` | Bind groups as data, keyed by section |
 | `lib.niri.rules` | Window-rule groups as data |
+| `lib.zen.prefs` | The Zen prefs for `user.js` as data, in the groups `core`, `privacy`, `layout` and `mods` |
+| `lib.zen.allPrefs` | Every group of `lib.zen.prefs`, merged |
+| `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
+| `lib.zen.policies` | Enterprise policies for the Zen package: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
+| `lib.zen.toUserJs` | `prefs -> string`, renders an attrset as `user_pref(...)` lines |
 | `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi |
 | `homeModules.editor` | helix settings, languages, theme |
 | `homeModules.niri-core` | animations, input, layout, misc, startup, theme. No binds, rules or outputs |
@@ -36,6 +41,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
 | `homeModules.zen-theme` | The Zen CSS only |
+| `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
 | `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, session env vars |
 
 ## Using it
@@ -82,6 +88,43 @@ programs.niri.settings.window-rules =
 
 `mkForce` is only needed if you import `niri-binds` *and* want to change one of its
 binds. Compose from `lib.niri.binds` instead.
+
+## Zen
+
+`zen-theme` only writes `~/.config/zen/customTheme.css`. Nothing loads that file until
+the profile has a `userChrome.css` importing it and a `user.js` switching userChrome
+on. `zen-profile` links both.
+
+Zen creates the profile on first launch. Until `~/.config/zen/profiles.ini` exists the
+activation step does nothing, so start Zen once and activate again.
+
+The mods come from a pinned revision of `github:zen-browser/theme-store`, set in
+`modules/zen-profile.nix`. The step copies `zen-themes.json` and `chrome/zen-themes/`
+into the profile on every activation, so a mod toggled or updated in the browser is
+reset by the next one. To add a mod, add its id to `lib.zen.mods`. To update the mods,
+move the pin.
+
+A profile has one `user.js`. If you want other prefs than `lib.zen.allPrefs`, do not
+import `zen-profile`. Link your own file instead, from all groups or from some:
+
+```nix
+pkgs.writeText "user.js" (
+  with inputs.nixentials.lib.zen;
+  toUserJs (prefs.core // prefs.privacy // myPrefs)
+)
+```
+
+The add-ons are an enterprise policy, which belongs to the package and not to the
+profile. No module here installs Zen, so apply the policy where you install it. With
+`github:youwen5/zen-browser-flake`, wrap the unwrapped package yourself. `.override`
+on its `default` package drops `extraPolicies` without an error.
+
+```nix
+pkgs.wrapFirefox inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped {
+  pname = "zen-browser";
+  extraPolicies = inputs.nixentials.lib.zen.policies;
+}
+```
 
 ## Colours
 

@@ -24,6 +24,7 @@
       lib = {
         colors = import ./lib/colors.nix;
         niri = import ./lib/niri.nix;
+        zen = import ./lib/zen.nix;
       };
 
       homeModules = {
@@ -42,6 +43,7 @@
         toolkit = ./modules/toolkit;
         dms-theme = ./modules/dms-theme.nix;
         zen-theme = ./modules/zen-theme.nix;
+        zen-profile = ./modules/zen-profile.nix;
       };
 
       nixosModules.session = ./nixos/session.nix;
