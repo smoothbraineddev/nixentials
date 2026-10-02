@@ -244,7 +244,7 @@ let
     wezterm = [
       {
         matches = [ { app-id = "^org\\.wezfurlong\\.wezterm$"; } ];
-        default-column-width.fixed = 741;
+        default-column-width.fixed = 745;
         draw-border-with-background = false;
         opacity = 0.9;
       }
