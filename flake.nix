@@ -42,6 +42,7 @@
 
         toolkit = ./modules/toolkit;
         dms-theme = ./modules/dms-theme.nix;
+        dms-settings = ./modules/dms-settings.nix;
         zen-theme = ./modules/zen-theme.nix;
         zen-profile = ./modules/zen-profile.nix;
       };

@@ -40,6 +40,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
+| `homeModules.dms-settings` | The DMS dock, control center, dash, bar and idle timeouts. The bar is on the left edge in island mode. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
 | `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, session env vars |
