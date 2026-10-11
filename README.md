@@ -35,12 +35,13 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.zen.toUserJs` | `prefs -> string`, renders an attrset as `user_pref(...)` lines |
 | `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi |
 | `homeModules.editor` | helix settings, languages, theme |
-| `homeModules.niri-core` | animations, input, layout, misc, startup, theme. No binds, rules or outputs |
+| `homeModules.niri-core` | animations, input, layout, misc, startup, theme, and the strut toggle (see below). No binds, rules or outputs |
 | `homeModules.niri-binds` | Every `lib.niri.binds` group, applied |
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
-| `homeModules.dms-settings` | The DMS dock, control center, dash, bar and idle timeouts. The bar is on the left edge in island mode. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, and the bar on the left edge in island mode, reserving no space and not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, and the island clock at 14px, weight 900. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
 | `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, session env vars |
@@ -89,6 +90,39 @@ programs.niri.settings.window-rules =
 
 `mkForce` is only needed if you import `niri-binds` *and* want to change one of its
 binds. Compose from `lib.niri.binds` instead.
+
+## Strut toggle
+
+niri has no IPC action for struts. `niri-core` therefore appends one `include` line to the
+config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` by absolute
+path and sets `optional=true`, which needs niri 26.04.
+
+`niri-toggle-strut` switches that file between empty and a `struts` block with
+`left -42`. That value puts a window 5px from the screen edge behind the `dms-settings`
+bar. The other three sides repeat `programs.niri.settings.layout.struts`, because a later
+`struts` block replaces the earlier one whole. niri reloads the file on change. The
+`struts` bind group puts the toggle on `Mod+T`.
+
+The file is writable and outside the store, so a value edited there applies at once and
+lasts until the next toggle. To keep a value, change `wideLeft` in
+`modules/niri/struts.nix`.
+
+## DMS niri includes
+
+`config.kdl` stays niri-flake's, so the DMS niri module (`inputs.dms.homeModules.niri`)
+can wrap it in its own includes. DMS's files load after the generated config and win
+where both set something. `dms-settings` matches them to `niri-core`: the DMS cursor
+equals the niri cursor, and `niriLayoutGapsOverride = -2` keeps gaps out of
+`dms/layout.kdl`. DMS's `outputs.kdl` places only the outputs DMS has seen, so leave
+it out and keep outputs in Nix:
+
+```nix
+programs.dank-material-shell.niri.includes.filesToInclude = [
+  "alttab" "binds" "colors" "cursor" "layout" "windowrules" "wpblur"
+];
+```
+
+`dms/layout.kdl` also sets `tiled-state true` on every window, which `niri-core` does not.
 
 ## Zen
 

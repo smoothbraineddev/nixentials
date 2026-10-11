@@ -221,6 +221,14 @@ let
       };
       "Mod+Ctrl+Shift+P".action.power-off-monitors = { };
     };
+
+    # Strut toggle. The script comes from niri-core (modules/niri/struts.nix).
+    struts = {
+      "Mod+T" = {
+        hotkey-overlay.title = "Toggle Wide Left Strut";
+        action.spawn = "niri-toggle-strut";
+      };
+    };
   };
 
   rules = {

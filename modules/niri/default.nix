@@ -1,6 +1,7 @@
 # Niri, minus everything role-specific.
 #
-# No binds, no window-rules, no outputs. Binds and rules ship as data from
+# No binds, no window-rules, no outputs. struts.nix installs `niri-toggle-strut`,
+# which the `struts` bind group in ../../lib/niri.nix spawns. Binds and rules ship as data from
 # ../../lib/niri.nix, and as the niri-binds / niri-rules convenience modules.
 # Outputs are host-specific by nature and never belong here.
 { ... }:
@@ -11,6 +12,7 @@
     ./layout.nix
     ./misc.nix
     ./startup.nix
+    ./struts.nix
     ./theme.nix
   ];
 }
