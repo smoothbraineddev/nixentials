@@ -18,6 +18,7 @@
   options.fastfetch.modules = lib.mkOption {
     type = lib.types.listOf (lib.types.either lib.types.str lib.types.attrs);
     default = [
+      "break"
       "title"
       "separator"
       "os"
