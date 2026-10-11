@@ -4,7 +4,7 @@
     type = lib.types.attrs;
     default = {
       type = "raw";
-      source = "${config.home.homeDirectory}/.nix/home/icons/nix-logo-gold.txt";
+      source = "${../../icons/nix-logo-gold.txt}";
       width = 45;
       height = 22;
       padding = {

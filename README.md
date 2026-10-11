@@ -97,15 +97,30 @@ niri has no IPC action for struts. `niri-core` therefore appends one `include` l
 config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` by absolute
 path and sets `optional=true`, which needs niri 26.04.
 
-`niri-toggle-strut` switches that file between empty and a `struts` block with
-`left -42`. That value puts a window 5px from the screen edge behind the `dms-settings`
-bar. The other three sides repeat `programs.niri.settings.layout.struts`, because a later
-`struts` block replaces the earlier one whole. niri reloads the file on change. The
-`struts` bind group puts the toggle on `Mod+T`.
+`niri-toggle-strut` switches that file between empty and the wide state. By default that
+is a `struts` block with `left -42`. That cancels the 42px exclusive zone of the
+`dms-settings` bar, so a window sits one gap from the screen edge. Sides the wide state leaves
+out repeat `programs.niri.settings.layout.struts`, because a later `struts` block
+replaces the earlier one whole. niri reloads the file on change. The `struts` bind group
+puts the toggle on `Mod+T`.
+
+`programs.niri.strutToggle.wideStruts` sets the wide state for every output. For bars on
+different edges, set `programs.niri.strutToggle.wideOutputs` instead, keyed by the
+output names in `programs.niri.settings.outputs`:
+
+```nix
+programs.niri.strutToggle.wideOutputs = {
+  "DP-3".left = -42;
+  "DP-2".right = -42;
+};
+```
+
+niri uses the first `output` section that matches and does not merge a later one. In
+this mode the file therefore repeats each named output's rendered section with a
+`layout` added, and the include moves to the top of the generated config.
 
 The file is writable and outside the store, so a value edited there applies at once and
-lasts until the next toggle. To keep a value, change `wideLeft` in
-`modules/niri/struts.nix`.
+lasts until the next toggle. To keep a value, set it in `programs.niri.strutToggle`.
 
 ## DMS niri includes
 

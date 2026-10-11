@@ -19,8 +19,19 @@
   };
 
   outputs =
-    { self, ... }:
+    { self, nixpkgs, ... }:
+    let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in
     {
+      devShells.x86_64-linux.default = pkgs.mkShell {
+        packages = with pkgs; [
+          nil
+          nixd
+          nixfmt
+        ];
+      };
+
       lib = {
         colors = import ./lib/colors.nix;
         niri = import ./lib/niri.nix;
