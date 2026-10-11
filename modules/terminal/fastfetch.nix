@@ -2,13 +2,13 @@
 {
   options.fastfetch.logo = lib.mkOption {
     type = lib.types.attrs;
+    # fastfetch renders the PNG itself and sizes it from the terminal's cell size, so the
+    # info column lines up at any font size. A pre-rendered sixel needs a hand-tuned height.
     default = {
-      type = "raw";
-      source = "${../../icons/nix-logo-gold.txt}";
+      type = "sixel";
+      source = "${../../icons/nix-logo-gold.png}";
       width = 45;
-      height = 22;
       padding = {
-        top = 2;
         left = 2;
         right = 4;
       };
@@ -18,7 +18,6 @@
   options.fastfetch.modules = lib.mkOption {
     type = lib.types.listOf (lib.types.either lib.types.str lib.types.attrs);
     default = [
-      "break"
       "title"
       "separator"
       "os"
