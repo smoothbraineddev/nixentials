@@ -52,7 +52,7 @@ Follow your own nixpkgs, so only one lands in your closure:
 
 ```nix
 inputs.nixentials = {
-  url = "gitlab:smoothbraineddev/nixentials";
+  url = "git+https://gitlab.com/smoothbraineddev/nixentials.git";
   inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
