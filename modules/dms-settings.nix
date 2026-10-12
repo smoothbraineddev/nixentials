@@ -485,7 +485,7 @@
           w = 4;
         }
         {
-          col = 0;
+          col = 4;
           enabled = true;
           h = 1;
           id = "audioOutput";
@@ -497,7 +497,7 @@
           enabled = true;
           h = 1;
           id = "audioInput";
-          row = 3;
+          row = 4;
           w = 4;
         }
         {
@@ -509,18 +509,10 @@
           w = 4;
         }
         {
-          col = 4;
-          enabled = true;
-          h = 1;
-          id = "idleInhibitor";
-          row = 4;
-          w = 4;
-        }
-        {
           col = 0;
           enabled = true;
           h = 1;
-          id = "colorPicker";
+          id = "idleInhibitor";
           row = 5;
           w = 4;
         }
@@ -564,6 +556,14 @@
           h = 1;
           id = "battery";
           row = 6;
+          w = 4;
+        }
+        {
+          col = 0;
+          enabled = true;
+          h = 1;
+          id = "builtin_vpn";
+          row = 3;
           w = 4;
         }
       ];

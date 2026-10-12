@@ -10,7 +10,7 @@ let
   islandGroupGap = 6;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
   islandClockFontSize = 14;
-  islandClockFontWeight = 900;
+  islandClockFontWeight = 800;
 in
 {
   programs.dank-material-shell = {

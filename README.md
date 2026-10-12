@@ -40,11 +40,19 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
-| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, and the bar on the left edge in island mode, reserving no space and not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, the island clock at 14px, weight 900, the sparklines on wide dash metric tiles drawn behind the text across the whole width and bottom two-thirds of the tile, and system stats polled every 1s instead of 3s. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, reserving no space and not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, the island clock at 14px, weight 800, the sparklines on wide dash metric tiles drawn behind the text across the whole width and bottom two-thirds of the tile, and system stats polled every 1s instead of 3s. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-calendar` | Runs DankCalendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
-| `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, session env vars |
+| `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, zsh, dconf (GTK theming needs it), session env vars |
+
+## Layout
+
+- `lib/` holds data and helpers, no modules: `colors.nix`, `niri.nix` and `zen.nix`.
+- `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`); the rest are flat files.
+- `nixos/session.nix` is the one NixOS module.
+- `icons/` holds the fastfetch logo.
 
 ## Using it
 
@@ -139,6 +147,28 @@ programs.dank-material-shell.niri.includes.filesToInclude = [
 
 `dms/layout.kdl` also sets `tiled-state true` on every window, which `niri-core` does not.
 
+## Calendar
+
+`dms-calendar` makes DankCalendar the DMS calendar backend and starts `dcal` with the
+graphical session. It adds no accounts. dcal keeps them in its own state, so add them
+once on each machine:
+
+```bash
+dcal account add caldav --name <name> --url https://dav.example.com --username <user>
+dcal account add ical <feed-url>
+dcal sync
+```
+
+`dcal account providers` lists the other account types. The CalDAV provider imports
+the server's own calendars but not its subscriptions, at least with Nextcloud. Add each
+subscribed feed with `dcal account add ical`.
+
+DMS finds dcal through a socket in `$XDG_RUNTIME_DIR` and stops looking after a fixed
+number of misses. If dcal was down for a while, run `systemctl --user restart dms`.
+
+`dms-settings` keeps `enableCalendarEvents = true`, which installs khal for the `auto`
+backend. With `dms-calendar` imported, khal goes unused.
+
 ## Zen
 
 `zen-theme` only writes `~/.config/zen/customTheme.css`. Nothing loads that file until
@@ -207,7 +237,8 @@ is usually harmless but is silent when it is not, so pass `lib.mkOrder` explicit
 
 ## Checks
 
-CI evaluates every `homeModules` output against both `nixos-unstable` and current
-stable. Consumers pin their own nixpkgs and this flake follows theirs, so a consumer's
-bump can break a module here. Catching it in this repo's CI beats catching it during a
-server rebuild.
+Nothing checks this flake automatically yet. It has no `checks` output and no CI
+config, and its outputs use none of the `nixpkgs-stable`, `home-manager`, `niri` and
+`dms` inputs. Consumers pin their own nixpkgs and this flake follows theirs, so a
+consumer's bump can break a module here. Until a check exists, a consumer's rebuild is
+where that shows up.
