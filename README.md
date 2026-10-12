@@ -41,7 +41,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
 | `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, and the bar on the left edge in island mode, reserving no space and not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, the island clock at 14px, weight 900, and the sparklines on wide dash metric tiles drawn behind the text across the whole tile. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, the island clock at 14px, weight 900, the sparklines on wide dash metric tiles drawn behind the text across the whole width and bottom two-thirds of the tile, and system stats polled every 1s instead of 3s. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
 | `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, session env vars |

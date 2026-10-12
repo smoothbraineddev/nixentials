@@ -1,6 +1,6 @@
 # Patches the DMS package for the island bar in dms-settings: a smaller gap between
 # the island's home groups, and a fixed size and weight for its clock. It also draws the
-# dash metric sparklines behind the text across the whole tile. All of these live in
+# dash metric sparklines behind the text and polls system stats every 1s. All of these live in
 # DMS's QML with no setting. The patch uses --replace-fail, so a DMS update that
 # moves those lines fails the build. Needs the dank-material-shell home module.
 { options, ... }:
@@ -41,8 +41,10 @@ in
             "font.pixelSize: root.fontSize
                         font.weight: root.fontWeight > 0 ? root.fontWeight : Theme.fontWeight"
 
-        # Wide dash metric tiles: draw the sparkline behind the text across the whole card,
-        # instead of in the bottom 45% to the right of the value. y already resolves to -pad.
+        # Wide dash metric tiles: draw the sparkline behind the text across the whole card width
+        # and the bottom two-thirds, instead of the bottom 45% right of the value. y stays bottom-aligned.
+        # historyLength fixes the x step to a full buffer, so a short history (network and disk
+        # restart empty on each open) grows in from the right instead of stretching across the tile.
         substituteInPlace $out/share/quickshell/dms/Modules/DDash/Overview/MetricCard.qml \
           --replace-fail \
             "anchors.left: root.wide ? valueText.right : parent.left" \
@@ -55,11 +57,22 @@ in
             "anchors.rightMargin: -root.pad" \
           --replace-fail \
             "height: root.wide ? root.height * DashMetrics.tileTrendRatio" \
-            "height: root.wide ? root.height" \
+            "height: root.wide ? root.height * 2 / 3" \
           --replace-fail \
             "insetBottom: root.wide ? root.pad : lineWidth" \
             "insetTop: root.wide ? root.pad : lineWidth
-                insetBottom: root.wide ? root.pad : lineWidth"
+                insetBottom: root.wide ? root.pad : lineWidth
+                historyLength: DgopService.historySize"
+
+        # Poll system stats every 1s instead of 3s (6s on power saver), and fetch the second
+        # sample 250ms after a dash card subscribes instead of 1s, so network and disk rates show sooner.
+        substituteInPlace $out/share/quickshell/dms/Services/DgopService.qml \
+          --replace-fail \
+            "updateInterval: powerSaver ? 6000 : 3000" \
+            "updateInterval: powerSaver ? 3000 : 1000" \
+          --replace-fail \
+            "interval: 1000" \
+            "interval: 250"
       '';
     });
   };
