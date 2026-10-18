@@ -14,7 +14,7 @@ in
       "$schema" = "https://starship.rs/config-schema.json";
 
       format = "[${l_round}](color_light)$os[${r_arrow}](bg:color_yellow fg:color_light)$directory[${r_arrow}](fg:color_yellow bg:color_aqua)$git_branch$git_status[${r_arrow}](fg:color_aqua bg:color_blue)$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python\${env_var.IN_NIX_SHELL}[${r_arrow}](fg:color_blue bg:color_gray)$direnv$docker_context[${r_arrow}](fg:color_gray) ";
-      right_format = "[${l_round}](color_black)$status$hostname[${l_arrow}](bg:color_black fg:color_gray)$cmd_duration[${l_arrow}](bg:color_gray fg:color_light)$time[${r_round}](color_light)";
+      right_format = "[${l_round}](color_black)$status$hostname\${env_var.VMSHELL_NAME}[${l_arrow}](bg:color_black fg:color_gray)$cmd_duration[${l_arrow}](bg:color_gray fg:color_light)$time[${r_round}](color_light)";
       add_newline = false;
 
       line_break.disabled = false;
@@ -31,7 +31,7 @@ in
         color_aqua = c.gruvbox.aqua;
         color_green = c.gruvbox.green;
         color_orange = c.gruvbox.orange;
-        color_purple = c.beans.purple;
+        color_purple = c.smoothbrained.purple;
         color_red = c.gruvbox.red;
         color_yellow = c.gruvbox.yellow;
       };
@@ -179,6 +179,15 @@ in
         vimcmd_replace_one_symbol = "[❮](bold fg:color_purple)";
         vimcmd_replace_symbol = "[❮](bold fg:color_purple)";
         vimcmd_visual_symbol = "[❮](bold fg:color_yellow)";
+      };
+
+      # Set only inside vmshell VMs, so the host never shows this segment.
+      # vmshell can turn off hostname in a VM and replace this format with
+      # the VM's own color; the yellow is a fallback.
+      env_var.VMSHELL_NAME = {
+        variable = "VMSHELL_NAME";
+        style = "bg:color_black";
+        format = "[[ vm:$env_value ](fg:color_yellow bg:color_black)]($style)";
       };
 
       env_var.IN_NIX_SHELL = {

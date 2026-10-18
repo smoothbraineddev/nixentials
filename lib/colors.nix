@@ -57,14 +57,37 @@ rec {
 
     # Reds / pinks / errors
     red = "#e14879"; # pinkish red
+    f00 = "#ff0000"; # pure red, named after its short hex
     pink = "#e05f8c"; # bright pink
     salmon = "#ffb4ab";
     blush = "#ffdad6";
     crimson = "#93000a";
     maroon = "#690005";
 
+    # Yellows
+    ff0 = "#ffff00"; # pure yellow, named after its short hex like f00
+
+    # Oranges
+    orange = "#ff8800";
+
+    # Purples
+    purple = "#833c9f";
+    orchid = "#be67e1"; # light purple
+
+    # Cyans
+    cyan = "#7ad3e0";
+    teal = "#0ac1cd"; # teal cyan
+
+    # Blues
+    sky = "#5fafff"; # sky blue
+
     # Greens
     green = "#94d66e"; # lime green
+    phosphor = "#00ff00"; # green-screen CRT green
+    phosphor_dim = "#00bf00"; # phosphor at amber's brightness, as deck tints ANSI 4
+    phosphor_mid = "#00cc00"; # between phosphor_dim and phosphor
+    fern = "#6ea64f"; # darker green
+    jade = "#5a9f81"; # muted green
     lime = "#a7e086"; # bright lime
     sage = "#b0cfa9";
     mint = "#ccebc4";
@@ -137,6 +160,14 @@ rec {
     faded_purple = "#8f3f71";
     faded_aqua = "#427b58";
     faded_orange = "#af3a03";
+
+    # Not in gruvbox: violets at the saturation and lightness of its accents,
+    # since its purple leans pink
+    violet = "#8b60a9";
+    bright_violet = "#ab83c3";
+    # Between faded_red and red, and between yellow and bright_yellow
+    deep_red = "#b51511";
+    light_yellow = "#e0a526";
   };
 
   # ── Terminal ANSI 16-color palette ────────────────────────────────────────
