@@ -46,6 +46,17 @@
 
       border.enable = false;
 
+      tab-indicator = {
+        gap = 3;
+        width = 5;
+        position = "left";
+        length.total-proportion = 0.42;
+        gaps-between-tabs = 5;
+        corner-radius = 5;
+        hide-when-single-tab = false;
+        place-within-column = true;
+      };
+
       shadow.enable = false;
     };
 

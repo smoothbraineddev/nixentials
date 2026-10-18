@@ -225,7 +225,7 @@ let
     # Strut toggle. The script comes from niri-core (modules/niri/struts.nix).
     struts = {
       "Mod+T" = {
-        hotkey-overlay.title = "Toggle Wide Left Strut";
+        hotkey-overlay.title = "Toggle Wide Strut";
         action.spawn = "niri-toggle-strut";
       };
     };
@@ -237,6 +237,9 @@ let
       {
         geometry-corner-radius = cornerRadius 12.0;
         clip-to-geometry = true;
+        # Clients draw square corners and no shadows, so the rounding above is the only one.
+        tiled-state = true;
+        draw-border-with-background = false;
       }
     ];
 

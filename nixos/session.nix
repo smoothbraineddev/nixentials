@@ -20,7 +20,24 @@
   programs.zsh.enable = true;
   programs.dconf.enable = true;
   programs.niri.enable = true;
+  # Toggling the left strut negative moves windows into the freed space. Without it, niri
+  # leaves them beside the old edge until a focus change refits the view.
+  nixpkgs.overlays = [
+    (final: prev: {
+      niri = prev.niri.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ../patches/niri-view-follows-left-strut.patch ];
+      });
+    })
+  ];
   programs.xwayland.enable = true;
+  environment.systemPackages = [ pkgs.xwayland-satellite ];
+
+  # File-manager support: gvfs for trash and removable, network and MTP mounts, tumbler
+  # for Nautilus thumbnails.
+  services.gvfs.enable = true;
+  services.tumbler.enable = true;
+
+  fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
   xdg.portal = {
     enable = true;

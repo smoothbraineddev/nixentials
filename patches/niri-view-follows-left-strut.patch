@@ -1,0 +1,38 @@
+--- a/src/layout/scrolling.rs
++++ b/src/layout/scrolling.rs
+@@ -318,6 +318,7 @@
+         options: Rc<Options>,
+     ) {
+         let working_area = compute_working_area(parent_area, scale, options.layout.struts);
++        let old_left = self.working_area.loc.x;
+ 
+         for (column, data) in zip(&mut self.columns, &mut self.data) {
+             column.update_config(view_size, working_area, parent_area, scale, options.clone());
+@@ -330,8 +331,26 @@
+         self.scale = scale;
+         self.options = options;
+ 
+-        // Apply always-center and such right away.
+         if !self.columns.is_empty() && !self.view_offset.is_gesture() {
++            // When the working area grows to the left, as when a left strut turns negative,
++            // the fit below keeps every column that still fits where it is. Move the view by
++            // the growth instead, so the windows take the freed space, unless a column
++            // already reaches past the old left edge.
++            let grown = old_left - working_area.loc.x;
++            if grown > 0. {
++                let view_x = self.target_view_pos();
++                let leftmost = self
++                    .column_xs(self.data.iter().copied())
++                    .zip(&self.data)
++                    .find(|(x, data)| x + data.width > view_x)
++                    .map(|(x, _)| x - view_x);
++                if leftmost.is_some_and(|x| x >= old_left) {
++                    let target = self.view_offset.target() + grown;
++                    self.animate_view_offset(self.active_column_idx, target);
++                }
++            }
++
++            // Apply always-center and such right away.
+             self.animate_view_offset_to_column(None, self.active_column_idx, None);
+         }
+     }
