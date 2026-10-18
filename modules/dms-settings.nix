@@ -31,8 +31,10 @@
       clockFormat = "24h";
       animationDuration = 420;
       fontWeight = 600;
-      monoFontFamily = "MesloLGS NF";
-      # fontFamily = "DejaVu Sans";
+      fontScale = 0.85;
+      fontFamily = "Google Sans Flex Black";
+      displayFontFamily = "Google Sans Flex";
+      monoFontFamily = "JetBrainsMono Nerd Font";
       textRenderType = 1;
       textRenderQuality = 4;
       lockScreenShowPowerActions = true;
@@ -320,15 +322,16 @@
       ];
       popupTransparency = 0.9;
       foregroundLayerTransparency = 0.5;
+      blurEnabled = false;
       blurBorderOpacity = 0.83;
       blurBorderSeeded = true;
       touchpadDragLock = true;
-      rememberLastQuery = true;
+      rememberLastMode = true;
+      rememberLastQuery = false;
       spotlightSectionViewModes = {
         apps = "list";
       };
-      dankLauncherV2Size = "micro";
-      launchPrefix = "$";
+      dankLauncherV2Size = "compact";
       avatarRing = "primary";
       notificationPopupPrivacyMode = true;
       notificationCompactMode = true;
@@ -645,6 +648,9 @@
         calendar = {
           weekends = true;
         };
+        clock = {
+          seconds = false;
+        };
         media = {
           artStyle = "circle";
           playerStyle = "material";
@@ -735,7 +741,7 @@
         {
           autoHide = false;
           autoHideDelay = 250;
-          barInsetPadding = 8;
+          barInsetPadding = 20;
           borderColor = "surfaceText";
           borderEnabled = false;
           borderOpacity = 1;
@@ -796,7 +802,6 @@
           islandOuterGap = 4;
           islandPalette = "default";
           islandPlacement = "edge";
-          islandReserveThickness = 0;
           islandRouteLauncher = "island";
           islandSatelliteBackground = false;
           islandSatelliteGap = 0;
@@ -821,15 +826,19 @@
           rightWidgets = [
             {
               enabled = true;
-              id = "systemTray";
-            }
-            {
-              enabled = false;
               id = "memUsage";
             }
             {
               enabled = true;
               id = "cpuTemp";
+            }
+            {
+              enabled = true;
+              id = "cpuUsage";
+            }
+            {
+              enabled = true;
+              id = "systemTray";
             }
             {
               enabled = true;
@@ -872,147 +881,6 @@
           islandHighContrast = false;
           surfaceCustomColor = "#25003b";
           widgetStyle = "pills";
-        }
-        {
-          autoHide = false;
-          autoHideDelay = 250;
-          barInsetPadding = 8;
-          borderColor = "surfaceText";
-          borderEnabled = false;
-          borderOpacity = 1;
-          borderThickness = 1;
-          bottomGap = 0;
-          clickThrough = false;
-          dot = true;
-          enabled = false;
-          followInterfaceStyle = false;
-          fontScale = 1;
-          gothCornerRadiusOverride = false;
-          gothCornerRadiusValue = 12;
-          gothCornersEnabled = false;
-          hoverPopoutDelay = 150;
-          hoverPopouts = true;
-          id = "dot1791752776859";
-          innerPadding = 4;
-          island = false;
-          islandAlongOffset = 0;
-          islandCompactThickness = 38;
-          islandFloating = false;
-          islandHighContrast = false;
-          islandHomeCompactTight = false;
-          islandHomeLayout = [
-            {
-              enabled = true;
-              id = "media";
-            }
-            {
-              enabled = true;
-              id = "clock";
-            }
-            {
-              enabled = true;
-              id = "weather";
-            }
-            {
-              enabled = false;
-              id = "status";
-            }
-            {
-              enabled = false;
-              id = "volume";
-            }
-            {
-              enabled = false;
-              id = "brightness";
-            }
-            {
-              enabled = false;
-              id = "notifications";
-            }
-          ];
-          islandHoverCloseDelay = 150;
-          islandHoverOpenDelay = 150;
-          islandInteractionMode = "hybrid";
-          islandMediaClockVisible = true;
-          islandNotificationExpand = true;
-          islandNotificationPopups = false;
-          islandOuterGap = 4;
-          islandPalette = "default";
-          islandPlacement = "edge";
-          islandReserveThickness = 0;
-          islandRouteClipboard = "island";
-          islandRouteControlCenter = "bar";
-          islandRouteLauncher = "island";
-          islandRouteNotificationCenter = "island";
-          islandSatelliteBackground = false;
-          islandSatelliteGap = 0;
-          islandSatelliteGothCorners = false;
-          islandSatellitePosition = "edges";
-          islandSystemOsd = true;
-          leftWidgets = [
-            {
-              enabled = true;
-              id = "workspaceSwitcher";
-            }
-          ];
-          maximizeDetection = true;
-          maximizeWidgetIcons = false;
-          maximizeWidgetText = false;
-          name = "Dot";
-          noBackground = true;
-          openOnOverview = true;
-          popupGapsAuto = true;
-          popupGapsManual = 4;
-          position = 2;
-          rightWidgets = [
-            {
-              enabled = true;
-              id = "systemTray";
-            }
-            {
-              enabled = false;
-              id = "memUsage";
-            }
-            {
-              enabled = true;
-              id = "cpuTemp";
-            }
-            {
-              enabled = true;
-              id = "controlCenterButton";
-              showMicPercent = true;
-            }
-            {
-              enabled = true;
-              id = "battery";
-            }
-          ];
-          screenPreferences = [
-            "all"
-          ];
-          scrollEnabled = false;
-          scrollXBehavior = "none";
-          scrollYBehavior = "focusWindow";
-          shadowColorMode = "text";
-          shadowCustomColor = "#000000";
-          shadowIntensity = 0;
-          shadowOpacity = 60;
-          showOnLastDisplay = true;
-          showOnWindowsOpen = true;
-          spacing = 4;
-          squareCorners = false;
-          surfaceColor = "default";
-          surfaceCustomColor = "#25003b";
-          transparency = 0.9;
-          visible = true;
-          widgetFollowInterfaceStyle = true;
-          widgetOutlineColor = "primary";
-          widgetOutlineEnabled = false;
-          widgetOutlineOpacity = 1;
-          widgetOutlineThickness = 1;
-          widgetPadding = 5;
-          widgetStyle = "pills";
-          widgetTransparency = 1;
         }
       ];
     };
