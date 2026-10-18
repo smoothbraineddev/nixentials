@@ -1,6 +1,10 @@
 { lib, pkgs, ... }:
 {
-  home.packages = [ pkgs.meslo-lgs-nf ];
+  home.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts.monospace = [ "JetBrainsMono Nerd Font" ];
+  };
 
   programs.wezterm = {
     enable = true;
@@ -22,7 +26,7 @@
         config.adjust_window_size_when_changing_font_size = false
 
         -- Font
-        config.font = wezterm.font('MesloLGS NF')
+        config.font = wezterm.font('JetBrainsMono Nerd Font')
         config.font_size = 9.0
 
         -- Scrollback
@@ -45,7 +49,7 @@
 
         -- Anchor content to the bottom: under tiling WMs the window rarely fits
         -- a whole number of cells, so the sub-cell leftover gets pushed into the
-        -- TOP padding instead of dangling as a half-row at the bottom. 
+        -- TOP padding instead of dangling as a half-row at the bottom.
         local function adjust_padding(window, pane)
           local overrides = window:get_config_overrides() or {}
           local window_dims = window:get_dimensions()

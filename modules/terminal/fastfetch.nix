@@ -56,8 +56,17 @@
     ];
   };
 
-  config.xdg.configFile."fastfetch/config.jsonc".text = builtins.toJSON {
-    logo = config.fastfetch.logo;
-    modules = config.fastfetch.modules;
+  options.fastfetch.display = lib.mkOption {
+    type = lib.types.attrs;
+    default = { };
+    description = "fastfetch's display section, such as the key and title colors.";
   };
+
+  config.xdg.configFile."fastfetch/config.jsonc".text = builtins.toJSON (
+    {
+      logo = config.fastfetch.logo;
+      modules = config.fastfetch.modules;
+    }
+    // lib.optionalAttrs (config.fastfetch.display != { }) { display = config.fastfetch.display; }
+  );
 }

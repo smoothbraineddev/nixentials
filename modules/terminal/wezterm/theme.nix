@@ -4,19 +4,6 @@ let
 in
 {
   programs.wezterm.extraConfig = ''
-    -- Dim background when window loses focus
-    wezterm.on('window-focus-changed', function(window, _pane)
-      local overrides = window:get_config_overrides() or {}
-      if window:is_focused() then
-        overrides.colors = nil
-      else
-        local colors = window:effective_config().colors or {}
-        colors.background = '${c.md3.surface_container_lowest}'
-        overrides.colors = colors
-      end
-      window:set_config_overrides(overrides)
-    end)
-
     -- Colors
     config.colors = {
       background    = '${c.md3.surface_container_lowest}',

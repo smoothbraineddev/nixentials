@@ -2,10 +2,13 @@
 {
   programs.zoxide.enableNushellIntegration = true;
 
-  # Carapace: flag and argument completion for external commands
+  # Carapace: flag and argument completion for external commands, in nushell
+  # only. home-manager would hook it into zsh too, where it replaces zsh's
+  # own completions (and nix's) with its own.
   programs.carapace = {
     enable = true;
     enableNushellIntegration = true;
+    enableZshIntegration = false;
   };
 
   programs.nushell = {

@@ -13,7 +13,7 @@ let
 in
 {
   programs.zsh.shellAliases = shared // {
-    c = "clear; fastfetch; echo ''; echo ''; echo '';";
+    c = "clear; (( $+commands[fastfetch] )) && fastfetch";
     x = "extract";
 
     ls = "eza";

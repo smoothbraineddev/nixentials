@@ -95,7 +95,7 @@
       ZLE_RPROMPT_INDENT=0
 
       # Startup
-      fastfetch
+      (( $+commands[fastfetch] )) && fastfetch
     '';
   };
 }
