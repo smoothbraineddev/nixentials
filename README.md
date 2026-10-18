@@ -40,18 +40,19 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
-| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, reserving no space and not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-island` | Patches the DMS package: a 6px gap between the island's media, clock and weather, the island clock at 14px, weight 800, the sparklines on wide dash metric tiles drawn behind the text across the whole width and bottom two-thirds of the tile, and system stats polled every 1s instead of 3s. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-island` | Patches the DMS package: a 5px gap between the island's media, clock and weather, the island clock at 14px, weight 900, the island weather icon at 18px, and the weather view opening on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-calendar` | Runs DankCalendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
-| `nixosModules.session` | niri, xwayland, portals, greetd + tuigreet, gnome-keyring, zsh, dconf (GTK theming needs it), session env vars |
+| `nixosModules.session` | niri with the strut patch (see below), xwayland, xwayland-satellite, portals, greetd + tuigreet, gnome-keyring, zsh, dconf (GTK theming needs it), gvfs and tumbler, JetBrains Mono Nerd Font, session env vars |
 
 ## Layout
 
 - `lib/` holds data and helpers, no modules: `colors.nix`, `niri.nix` and `zen.nix`.
 - `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`); the rest are flat files.
 - `nixos/session.nix` is the one NixOS module.
+- `patches/` holds the niri patch that `nixosModules.session` applies.
 - `icons/` holds the fastfetch logo.
 
 ## Using it
@@ -123,29 +124,36 @@ programs.niri.strutToggle.wideOutputs = {
 };
 ```
 
-niri uses the first `output` section that matches and does not merge a later one. In
-this mode the file therefore repeats each named output's rendered section with a
-`layout` added, and the include moves to the top of the generated config.
+In this mode `niri-toggle-strut` flips only the focused output. It finds that output by
+connector or by "make model serial", and the file has a section for each output that is
+wide. niri uses the first `output` section that matches and does not merge a later one.
+The file therefore repeats each wide output's rendered section with a `layout` added, and
+the include moves to the top of the generated config.
 
 The file is writable and outside the store, so a value edited there applies at once and
 lasts until the next toggle. To keep a value, set it in `programs.niri.strutToggle`.
+
+When the working area grows to the left, niri leaves every column that still fits where it
+is, so windows stay beside the bar until a focus change. `nixosModules.session` patches
+niri with `patches/niri-view-follows-left-strut.patch`, which moves the view by the growth
+unless a column already reaches past the old edge. The patch is an overlay on `pkgs.niri`,
+so a host that sets `programs.niri.package` to another package does not get it.
 
 ## DMS niri includes
 
 `config.kdl` stays niri-flake's, so the DMS niri module (`inputs.dms.homeModules.niri`)
 can wrap it in its own includes. DMS's files load after the generated config and win
-where both set something. `dms-settings` matches them to `niri-core`: the DMS cursor
-equals the niri cursor, and `niriLayoutGapsOverride = -2` keeps gaps out of
-`dms/layout.kdl`. DMS's `outputs.kdl` places only the outputs DMS has seen, so leave
-it out and keep outputs in Nix:
+where both set something. The modules here already set what the other files would, so
+only DMS's window rules, which open its own windows floating and opaque, need including:
 
 ```nix
-programs.dank-material-shell.niri.includes.filesToInclude = [
-  "alttab" "binds" "colors" "cursor" "layout" "windowrules" "wpblur"
-];
+programs.dank-material-shell.niri.includes.filesToInclude = [ "windowrules" ];
 ```
 
-`dms/layout.kdl` also sets `tiled-state true` on every window, which `niri-core` does not.
+`dms-settings` keeps the rest in step with `niri-core` for a consumer that includes more:
+the DMS cursor equals the niri cursor, and `niriLayoutGapsOverride = -2` keeps gaps out of
+`dms/layout.kdl`. DMS's `outputs.kdl` places only the outputs DMS has seen, so keep
+outputs in Nix.
 
 ## Calendar
 
