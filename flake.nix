@@ -53,7 +53,7 @@
 
         toolkit = ./modules/toolkit;
         dms-theme = ./modules/dms-theme.nix;
-        dms-settings = ./modules/dms-settings.nix;
+        dms-settings = ./modules/dms-settings;
         dms-island = ./modules/dms-island.nix;
         dms-calendar = ./modules/dms-calendar.nix;
         zen-theme = ./modules/zen-theme.nix;

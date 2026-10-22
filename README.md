@@ -50,7 +50,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 ## Layout
 
 - `lib/` holds data and helpers, no modules: `colors.nix`, `niri.nix` and `zen.nix`.
-- `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`); the rest are flat files.
+- `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`, `dms-settings`); the rest are flat files. `dms-settings` has one file per section of the DMS settings sidebar.
 - `nixos/session.nix` is the one NixOS module.
 - `patches/` holds the niri patch that `nixosModules.session` applies.
 - `icons/` holds the fastfetch logo.
