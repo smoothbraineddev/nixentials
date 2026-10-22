@@ -107,11 +107,12 @@ config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` b
 path and sets `optional=true`, which needs niri 26.04.
 
 `niri-toggle-strut` switches that file between empty and the wide state. By default that
-is a `struts` block with `left -42`. That cancels the 42px exclusive zone of the
-`dms-settings` bar, so a window sits one gap from the screen edge. Sides the wide state leaves
-out repeat `programs.niri.settings.layout.struts`, because a later `struts` block
-replaces the earlier one whole. niri reloads the file on change. The `struts` bind group
-puts the toggle on `Mod+T`.
+is a `struts` block with `left -39`. The `dms-settings` bar reserves 41px, its 38px pill
+plus its 3px `islandOuterGap`. -39 leaves 2px of that, so a window sits one gap plus 2px
+from the screen edge. Sides the wide state leaves out repeat
+`programs.niri.settings.layout.struts`, because a later `struts` block replaces the earlier
+one whole. niri reloads the file on change. The `struts` bind group puts the toggle on
+`Mod+T`.
 
 `programs.niri.strutToggle.wideStruts` sets the wide state for every output. For bars on
 different edges, set `programs.niri.strutToggle.wideOutputs` instead, keyed by the
@@ -119,8 +120,8 @@ output names in `programs.niri.settings.outputs`:
 
 ```nix
 programs.niri.strutToggle.wideOutputs = {
-  "DP-3".left = -42;
-  "DP-2".right = -42;
+  "DP-3".left = -39;
+  "DP-2".right = -39;
 };
 ```
 

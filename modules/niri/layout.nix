@@ -14,7 +14,7 @@
       center-focused-column = "never";
 
       preset-column-widths = [
-        { fixed = 360; }
+        { fixed = 369; }
         { fixed = 745; }
         { proportion = 0.25; }
         { proportion = 0.33333; }
