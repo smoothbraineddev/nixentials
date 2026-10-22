@@ -1,19 +1,25 @@
-# Patches the DMS package for the island bar in dms-settings: a smaller gap between the
-# island's home groups, a fixed size and weight for its clock, a larger weather icon, and a
-# weather view that opens on hover. It also draws the dash metric sparklines behind the
-# text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
-# All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
-# update that moves those lines fails the build. Needs the dank-material-shell home module.
+# Patches the DMS package for the island bar in dms-settings. The island gets smaller gaps
+# between its home groups and at its ends, and separate gaps around the clock. Its clock
+# gets a fixed size and weight, its weather icon a fixed size, and its weather and media
+# views open on hover. It also draws the dash metric sparklines behind the text, polls
+# system stats every 1s with the dash closed too, and sets the dash clock font. All of these
+# live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS update that
+# moves those lines fails the build. Needs the dank-material-shell home module.
 { options, ... }:
 let
-  # Gap between the island's home groups (media, clock, weather). DMS uses
-  # Theme.spacingM (12px) with no setting for it; "Compact" also shrinks text and slots.
-  islandGroupGap = 5;
+  # Gaps in the vertical island, in px. DMS uses Theme.spacingM (12px) for all of them and has no
+  # setting; "Compact" also shrinks text and slots. islandGroupGap is the gap between groups,
+  # except next to the clock, which has its own gap above (media) and below (weather).
+  # islandEdgeGap is the space between the first and last group and the island's ends.
+  islandGroupGap = 8;
+  islandClockGapAbove = 4;
+  islandClockGapBelow = 2;
+  islandEdgeGap = 8;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
   islandClockFontSize = 14;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
-  islandWeatherIconSize = 18;
+  islandWeatherIconSize = 15;
   # Dash clock card digits. "Google Sans Flex" equals DMS's defaultFontFamily, so DClockFace uses
   # the variable face and sets the weight through its wght axis. Any other family gets a static face.
   dashClockFontFamily = "Google Sans Flex";
@@ -46,22 +52,44 @@ in
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)
 
                 Timer {
-                    running: slotArea.group.isWeather && slotArea.containsMouse
+                    running: (slotArea.group.isWeather || slotArea.group.isMedia && root.controller.mediaAvailable) && slotArea.containsMouse
                     interval: root.controller.hoverOpenDelay
-                    onTriggered: root.controller.requestHoverWeather()
+                    onTriggered: root.controller.requestHoverPeek(slotArea.group.isMedia ? \"media\" : \"weather\")
                 }"
 
-        # Hovering the island's weather slot opens the weather view as a hover peek, the way
+        # The clock group's height changes by the difference to islandGroupGap on each side that
+        # has a neighbour. Its content shifts so each gap lands on its own side. homeSlotMargin pads
+        # both ends of the island; HomeCompact's groupSpacing, now read only by edgePad, follows it.
+        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/Activities/HomeCompact.qml \
+          --replace-fail \
+            "readonly property bool isClock: group.groupId === \"clock\"" \
+            "readonly property bool isClock: group.groupId === \"clock\"
+                readonly property real clockLead: group.vertical && group.isClock && group.slotIndex > 0 ? ${toString islandClockGapAbove} - ${toString islandGroupGap} : 0
+                readonly property real clockTrail: group.vertical && group.isClock && group.slotIndex < root.groupIds.length - 1 ? ${toString islandClockGapBelow} - ${toString islandGroupGap} : 0" \
+          --replace-fail \
+            "height: group.vertical ? content.implicitHeight : root.slotSize" \
+            "height: group.vertical ? content.implicitHeight + group.clockLead + group.clockTrail : root.slotSize" \
+          --replace-fail \
+            "columns: group.vertical ? 1 : Math.max(1, content.visibleChildren.length)" \
+            "columns: group.vertical ? 1 : Math.max(1, content.visibleChildren.length)
+                    anchors.verticalCenterOffset: (group.clockLead - group.clockTrail) / 2"
+        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
+          --replace-fail \
+            "readonly property real homeSlotMargin: homeCompactTight ? Theme.spacingS : Theme.spacingM" \
+            "readonly property real homeSlotMargin: ${toString islandEdgeGap}"
+
+        # Hovering the island's weather or media slot opens its view as a hover peek, the way
         # hybrid mode peeks the home view. hoverExpanded makes the existing close timer collapse it
         # when the pointer leaves the island. Without keyboard focus the peek does not take input
-        # from the focused window. A click still opens it pinned with focus.
+        # from the focused window. A click still opens it pinned with focus. Expanding leaves
+        # mediaPreferred alone, so the island returns to the face picked with a right-click.
         substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
           --replace-fail \
             "    function requestNotificationCenter(shouldToggle) {" \
-            "    function requestHoverWeather() {
+            "    function requestHoverPeek(activityId) {
                 if (inputSuspended || !hoverExpandEnabled || expanded)
                     return false;
-                if (!requestActivity(\"weather\", true, false))
+                if (!requestActivity(activityId, true, false))
                     return false;
                 hoverExpanded = true;
                 return true;
