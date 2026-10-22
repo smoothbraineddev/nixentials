@@ -223,6 +223,20 @@ let
       border: none !important;
       outline: none !important;
     }
+
+    /* ===== WIDER COMPACT MODE SIDEBAR TRIGGER ===== */
+    /* The collapsed sidebar only peeks out by half of --zen-compact-float
+       plus 1px, so hovering it means hitting the window edge. A transparent
+       strip past its right edge is part of #navigator-toolbox, so Zen's
+       mouseover listener on the toolbox opens it from further in. */
+    :root[zen-compact-mode='true']:not([zen-right-side='true']) #navigator-toolbox::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      width: 12px;
+    }
   '';
 
 in

@@ -39,6 +39,8 @@ let
       "zen.urlbar.behavior" = "float";
       "zen.view.compact.enable-at-startup" = true;
       "zen.view.compact.toolbar-flash-popup" = true;
+      # Default 150 ms; the sidebar stays open this long after the pointer leaves it.
+      "zen.view.compact.sidebar-keep-hover.duration" = 400;
       "zen.view.show-newtab-button-top" = false;
       "zen.view.window.scheme" = 0;
       "zen.tabs.show-newtab-vertical" = false;
