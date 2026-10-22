@@ -26,8 +26,9 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 |---|---|
 | `lib.colors` | The five palettes as data (`smoothbrained`, `beans`, `gruvbox`, `dank16`, `md3`), plus the `hexToRgb` and `stripHash` helpers, for apps wanting decimal or unprefixed hex |
 | `lib.niri.cornerRadius` | `r -> { top-left; top-right; bottom-right; bottom-left; }`. All four corners are required by `geometry-corner-radius` |
-| `lib.niri.binds` | Bind groups as data, keyed by section |
-| `lib.niri.rules` | Window-rule groups as data |
+| `lib.niri.binds` | Bind groups as data, keyed by section: `overview`, `terminal`, `lock`, `windows`, `focus`, `movement`, `columns`, `monitors`, `workspaces`, `wheel`, `numbered`, `sizing`, `system` and `struts` |
+| `lib.niri.rules` | Window-rule groups as data: `defaults` (rounded corners), `inactive` (85% opacity) and `wezterm` (its column width and opacity) |
+| `lib.niri.allBinds`, `lib.niri.allRules` | Every bind group merged and every rule group concatenated, as `niri-binds` and `niri-rules` apply them |
 | `lib.zen.prefs` | The Zen prefs for `user.js` as data, in the groups `core`, `privacy`, `layout` and `mods` |
 | `lib.zen.allPrefs` | Every group of `lib.zen.prefs`, merged |
 | `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
@@ -243,6 +244,10 @@ its Lua by concatenating `extraConfig` chunks at explicit `lib.mkOrder` position
 
 A chunk added at the default order lands **between the colours and the `return`**. That
 is usually harmless but is silent when it is not, so pass `lib.mkOrder` explicitly.
+
+## Development
+
+`nix develop`, or direnv through `.envrc`, provides nil, nixd and nixfmt.
 
 ## Checks
 
