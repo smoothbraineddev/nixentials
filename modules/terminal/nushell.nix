@@ -56,7 +56,7 @@
 
       # Shortcuts matching zsh aliases, defined as commands since nushell
       # aliases can't contain semicolons
-      def c    [] { clear; fastfetch }
+      def c    [] { clear; print ""; fastfetch; print "" }
 
       # Cargo wrapper: add pedantic+nursery flags to clippy invocations
       def --wrapped cargo [...rest] {
