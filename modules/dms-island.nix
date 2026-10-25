@@ -1,10 +1,11 @@
 # Patches the DMS package for the island bar in dms-settings. The island gets smaller gaps
 # between its home groups and at its ends, and separate gaps around the clock. Its clock
-# gets a fixed size and weight, its weather icon a fixed size, and its weather and media
-# views open on hover. It also draws the dash metric sparklines behind the text, polls
-# system stats every 1s with the dash closed too, and sets the dash clock font. All of these
-# live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS update that
-# moves those lines fails the build. Needs the dank-material-shell home module.
+# gets a fixed size and weight, its weather icon a fixed size, its temperature digits sit on
+# the center line, and its weather and media views open on hover. It also draws the dash
+# metric sparklines behind the text, polls system stats every 1s with the dash closed too,
+# and sets the dash clock font. All of these live in DMS's QML with no setting. The patch
+# uses --replace-fail, so a DMS update that moves those lines fails the build. Needs the
+# dank-material-shell home module.
 { options, ... }:
 let
   # Gaps in the vertical island, in px. DMS uses Theme.spacingM (12px) for all of them and has no
@@ -13,12 +14,14 @@ let
   # islandEdgeGap is the space between the first and last group and the island's ends.
   islandGroupGap = 8;
   islandClockGapAbove = 4;
-  islandClockGapBelow = 2;
-  islandEdgeGap = 8;
+  islandClockGapBelow = 4;
+  islandEdgeGap = 10;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
   islandClockFontSize = 14;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
+  # The temperature below it is padded left by the width of its trailing "°", so the digits sit
+  # on the center line.
   islandWeatherIconSize = 15;
   # Dash clock card digits. "Google Sans Flex" equals DMS's defaultFontFamily, so DClockFace uses
   # the variable face and sets the weight through its wght axis. Any other family gets a static face.
@@ -47,6 +50,17 @@ in
                         size: root.statusIconSize" \
             "name: WeatherService.getWeatherIcon(WeatherService.weather.wCode)
                         size: ${toString islandWeatherIconSize}" \
+          --replace-fail \
+            "text: WeatherService.currentTempText()" \
+            "text: WeatherService.currentTempText()
+                id: islandTempText
+                leftPadding: degreeMetrics.advanceWidth
+
+                TextMetrics {
+                    id: degreeMetrics
+                    font: islandTempText.font
+                    text: \"°\"
+                }" \
           --replace-fail \
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)" \
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)

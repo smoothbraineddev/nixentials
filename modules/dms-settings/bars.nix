@@ -61,12 +61,14 @@
         islandHoverOpenDelay = 150;
         islandInteractionMode = "hybrid";
         islandMediaClockVisible = true;
+        islandNotch = true;
         islandNotificationExpand = true;
         islandNotificationPopups = false;
         islandOuterGap = 3;
         islandPalette = "default";
         islandPlacement = "edge";
         islandRouteLauncher = "island";
+        islandRoutePowerMenu = "island";
         islandSatelliteBackground = false;
         islandSatelliteGap = 0;
         islandSatelliteGothCorners = false;

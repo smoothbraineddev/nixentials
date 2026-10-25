@@ -8,7 +8,7 @@
  
          for (column, data) in zip(&mut self.columns, &mut self.data) {
              column.update_config(view_size, working_area, parent_area, scale, options.clone());
-@@ -330,8 +331,26 @@
+@@ -330,8 +331,27 @@
          self.scale = scale;
          self.options = options;
  
@@ -17,14 +17,15 @@
 +            // When the working area grows to the left, as when a left strut turns negative,
 +            // the fit below keeps every column that still fits where it is. Move the view by
 +            // the growth instead, so the windows take the freed space, unless a column
-+            // already reaches past the old left edge.
++            // already reaches past the old left edge. Columns that end at or before that
++            // edge sat under the strut, as the one left of the active column does.
 +            let grown = old_left - working_area.loc.x;
 +            if grown > 0. {
 +                let view_x = self.target_view_pos();
 +                let leftmost = self
 +                    .column_xs(self.data.iter().copied())
 +                    .zip(&self.data)
-+                    .find(|(x, data)| x + data.width > view_x)
++                    .find(|(x, data)| x + data.width > view_x + old_left)
 +                    .map(|(x, _)| x - view_x);
 +                if leftmost.is_some_and(|x| x >= old_left) {
 +                    let target = self.view_offset.target() + grown;

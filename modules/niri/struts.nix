@@ -117,20 +117,20 @@ in
     wideStruts = lib.mkOption {
       type = sides;
       default = {
-        left = -39;
+        left = -40;
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
         programs.niri.settings.layout.struts. A DMS island bar reserves its 38px pill plus
-        islandOuterGap, 41px at the 3px dms-settings sets. -39 leaves 2px of that, so a
-        window sits one gap plus 2px from the screen edge.
+        islandOuterGap, 41px at the 3px dms-settings sets. -40 leaves 1px of that, so a
+        window sits one gap plus 1px from the screen edge.
       '';
     };
     wideOutputs = lib.mkOption {
       type = lib.types.attrsOf sides;
       default = { };
       example = {
-        "DP-3".left = -39;
+        "DP-3".left = -40;
       };
       description = ''
         Struts for the wide state per output, keyed by the name the output has in

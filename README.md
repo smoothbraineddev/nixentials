@@ -42,7 +42,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
 | `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-island` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and 2px below the clock, and 8px at its ends. Its clock is 14px at weight 900, its weather icon 15px, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-island` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and below the clock, and 10px at its ends. Its clock is 14px at weight 900, its weather icon 15px, its temperature digits sit on the center line, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-calendar` | Runs Dux Calendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
@@ -108,8 +108,8 @@ config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` b
 path and sets `optional=true`, which needs niri 26.04.
 
 `niri-toggle-strut` switches that file between empty and the wide state. By default that
-is a `struts` block with `left -39`. The `dms-settings` bar reserves 41px, its 38px pill
-plus its 3px `islandOuterGap`. -39 leaves 2px of that, so a window sits one gap plus 2px
+is a `struts` block with `left -40`. The `dms-settings` bar reserves 41px, its 38px pill
+plus its 3px `islandOuterGap`. -40 leaves 1px of that, so a window sits one gap plus 1px
 from the screen edge. Sides the wide state leaves out repeat
 `programs.niri.settings.layout.struts`, because a later `struts` block replaces the earlier
 one whole. niri reloads the file on change. The `struts` bind group puts the toggle on
@@ -121,8 +121,8 @@ output names in `programs.niri.settings.outputs`:
 
 ```nix
 programs.niri.strutToggle.wideOutputs = {
-  "DP-3".left = -39;
-  "DP-2".right = -39;
+  "DP-3".left = -40;
+  "DP-2".right = -40;
 };
 ```
 
