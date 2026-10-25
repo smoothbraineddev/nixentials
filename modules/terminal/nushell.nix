@@ -13,6 +13,7 @@
 
   programs.nushell = {
     enable = true;
+    loadSessionVariables = true;
 
     extraEnv = ''
       $env.PATH = ($env.PATH | prepend $"($env.HOME)/.local/bin")

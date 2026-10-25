@@ -1,4 +1,4 @@
-# Points the DMS dash calendar at DankCalendar (dcal) and runs dcal as a user service. dcal
+# Points the DMS dash calendar at Dux Calendar (dcal) and runs dcal as a user service. dcal
 # syncs Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added by hand with
 # `dcal account add`, so no credentials land in the store. Needs the dank-material-shell home
 # module.
@@ -13,16 +13,18 @@ let
   # lacks. Without it the unit crash-loops on `exec: "qs": executable file not found`.
   dcalSession = pkgs.writeShellScript "dcal-session" ''
     PATH=${lib.makeBinPath [ config.programs.dank-material-shell.quickshell.package ]}:$PATH
-    exec ${lib.getExe' pkgs.dankcalendar "dcal"} run --session --hidden
+    exec ${lib.getExe' pkgs.dux-calendar "dcal"} run --session --hidden
   '';
 in
 {
-  home.packages = [ pkgs.dankcalendar ];
+  home.packages = [ pkgs.dux-calendar ];
 
   # Mirrors the dcal.service the package ships, with ExecStart swapped for the wrapper.
   systemd.user.services.dcal = {
     Unit = {
-      Description = "Dank Calendar";
+      Description = "Dux Calendar";
+      StartLimitIntervalSec = 60;
+      StartLimitBurst = 5;
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };

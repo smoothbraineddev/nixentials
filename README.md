@@ -43,7 +43,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.dms-theme` | The DMS colour mapping only |
 | `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-island` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and 2px below the clock, and 8px at its ends. Its clock is 14px at weight 900, its weather icon 15px, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-calendar` | Runs DankCalendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-calendar` | Runs Dux Calendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
 | `nixosModules.session` | niri with the strut patch (see below), xwayland, xwayland-satellite, portals, greetd + tuigreet, gnome-keyring, zsh, dconf (GTK theming needs it), gvfs and tumbler, JetBrains Mono Nerd Font, session env vars |
@@ -159,7 +159,7 @@ outputs in Nix.
 
 ## Calendar
 
-`dms-calendar` makes DankCalendar the DMS calendar backend and starts `dcal` with the
+`dms-calendar` makes Dux Calendar the DMS calendar backend and starts `dcal` with the
 graphical session. It adds no accounts. dcal keeps them in its own state, so add them
 once on each machine:
 
