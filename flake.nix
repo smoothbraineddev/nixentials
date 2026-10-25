@@ -64,6 +64,7 @@
         session = ./nixos/session.nix;
         portable = ./nixos/portable.nix;
         rescue = ./nixos/rescue.nix;
+        installer = ./nixos/installer.nix;
       };
     };
 }
