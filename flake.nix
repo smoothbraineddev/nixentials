@@ -60,6 +60,10 @@
         zen-profile = ./modules/zen-profile.nix;
       };
 
-      nixosModules.session = ./nixos/session.nix;
+      nixosModules = {
+        session = ./nixos/session.nix;
+        portable = ./nixos/portable.nix;
+        rescue = ./nixos/rescue.nix;
+      };
     };
 }
