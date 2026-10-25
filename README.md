@@ -109,8 +109,9 @@ path and sets `optional=true`, which needs niri 26.04.
 
 `niri-toggle-strut` switches that file between empty and the wide state. By default that
 is a `struts` block with `left -38`. The `dms-settings` bar is a notch, which has no outer
-gap, so it reserves `islandReserveThickness`, 40px by default and more than its 36px pill.
--38 leaves 2px of that, so a window sits one gap plus 2px from the screen edge. Sides the wide state leaves out repeat
+gap, and its `islandReserveThickness` of 38px is the width of its pill face, so windows
+sit one gap from the notch. -38 gives all of it back, so a window sits one gap from the
+screen edge. Sides the wide state leaves out repeat
 `programs.niri.settings.layout.struts`, because a later `struts` block replaces the earlier
 one whole. niri reloads the file on change. The `struts` bind group puts the toggle on
 `Mod+T`.

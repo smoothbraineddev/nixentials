@@ -121,10 +121,9 @@ in
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
-        programs.niri.settings.layout.struts. A DMS island bar in notch mode has no outer
-        gap and reserves the larger of islandReserveThickness (40px by default) and its
-        pill, 36px in dms-laptop. -38 leaves 2px of the 40, so a window sits one gap plus
-        2px from the screen edge.
+        programs.niri.settings.layout.struts. The dms-settings bar is a notch, which has no
+        outer gap, and reserves 38px, the width of its pill face. -38 gives all of that back,
+        so a window sits one gap from the screen edge.
       '';
     };
     wideOutputs = lib.mkOption {

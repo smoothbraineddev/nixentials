@@ -26,6 +26,9 @@
         island = true;
         islandAlongOffset = 0;
         islandCompactThickness = 36;
+        # The pill face is 2px wider than islandCompactThickness. DMS reserves 40px unless
+        # told otherwise, which leaves windows 2px farther from the notch than the gaps.
+        islandReserveThickness = 38;
         islandFloating = false;
         islandHomeLayout = [
           {
