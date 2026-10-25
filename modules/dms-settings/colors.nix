@@ -1,6 +1,6 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     currentThemeName = "custom";
     customThemeFile = "${config.xdg.configHome}/DankMaterialShell/smoothbrained-theme.json";
     currentThemeCategory = "custom";

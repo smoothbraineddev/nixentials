@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     dockConfigs = [
       {
         id = "dock";
@@ -68,7 +68,7 @@
             widgetId = "appsDock";
           }
           {
-            enabled = false;
+            enabled = true;
             id = "dock_trash";
             widgetId = "dockTrash";
           }

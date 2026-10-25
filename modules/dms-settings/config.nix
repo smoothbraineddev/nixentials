@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell = {
+  programs.dank-material-shell = lib.mapAttrsRecursive (_: lib.mkDefault) {
     # feature toggles
     enableSystemMonitoring = true;
     enableVPN = true;

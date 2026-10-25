@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     controlCenterWidgets = [
       {
         col = 0;
@@ -89,7 +89,7 @@
         col = 0;
         enabled = true;
         h = 1;
-        id = "plugin_dankKDEConnect";
+        id = "colorPicker";
         row = 4;
         w = 4;
       }

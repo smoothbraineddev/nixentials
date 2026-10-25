@@ -3,13 +3,7 @@
   programs.niri.settings = {
     # === Layout ===
     layout = {
-      gaps = lib.mkDefault 5;
-      struts = lib.mkDefault {
-        left = 0;
-        right = 0;
-        top = 0;
-        bottom = 0;
-      };
+      gaps = lib.mkDefault 10;
       background-color = "transparent";
       center-focused-column = "never";
 

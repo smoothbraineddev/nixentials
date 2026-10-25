@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     barConfigs = [
       {
         autoHide = false;
@@ -25,7 +25,7 @@
         innerPadding = 4;
         island = true;
         islandAlongOffset = 0;
-        islandCompactThickness = 38;
+        islandCompactThickness = 36;
         islandFloating = false;
         islandHomeLayout = [
           {

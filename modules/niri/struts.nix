@@ -117,20 +117,21 @@ in
     wideStruts = lib.mkOption {
       type = sides;
       default = {
-        left = -40;
+        left = -38;
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
-        programs.niri.settings.layout.struts. A DMS island bar reserves its 38px pill plus
-        islandOuterGap, 41px at the 3px dms-settings sets. -40 leaves 1px of that, so a
-        window sits one gap plus 1px from the screen edge.
+        programs.niri.settings.layout.struts. A DMS island bar in notch mode has no outer
+        gap and reserves the larger of islandReserveThickness (40px by default) and its
+        pill, 36px in dms-laptop. -38 leaves 2px of the 40, so a window sits one gap plus
+        2px from the screen edge.
       '';
     };
     wideOutputs = lib.mkOption {
       type = lib.types.attrsOf sides;
       default = { };
       example = {
-        "DP-3".left = -40;
+        "DP-3".left = -38;
       };
       description = ''
         Struts for the wide state per output, keyed by the name the output has in

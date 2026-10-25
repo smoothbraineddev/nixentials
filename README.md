@@ -41,7 +41,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
-| `homeModules.dms-settings` | The DMS settings of the laptop config: theme, launcher, notifications, lock screen, cursor, dock, control center, dash, AC and battery idle timeouts, and the bar on the left edge in island mode, not scrolling niri columns. Also the feature toggles and clipboard settings. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-settings` | A complete DMS config with defaults most people can live with: theme, launcher, notifications, lock screen, cursor, dash, the island notch bar on the left edge of every screen, a dock with launcher, apps and trash, a control center of built-in tiles, idle timeouts (lock and screen off after 15 min on AC, 5 min on battery, suspend after 15 min on battery only), the feature toggles and clipboard settings. Every value is a `mkDefault`, so a plain value overrides it, and lists such as `barConfigs` replace ours whole. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-island` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and below the clock, and 10px at its ends. Its clock is 14px at weight 900, its weather icon 15px, its temperature digits sit on the center line, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-calendar` | Runs Dux Calendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
@@ -108,9 +108,9 @@ config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` b
 path and sets `optional=true`, which needs niri 26.04.
 
 `niri-toggle-strut` switches that file between empty and the wide state. By default that
-is a `struts` block with `left -40`. The `dms-settings` bar reserves 41px, its 38px pill
-plus its 3px `islandOuterGap`. -40 leaves 1px of that, so a window sits one gap plus 1px
-from the screen edge. Sides the wide state leaves out repeat
+is a `struts` block with `left -38`. The `dms-settings` bar is a notch, which has no outer
+gap, so it reserves `islandReserveThickness`, 40px by default and more than its 36px pill.
+-38 leaves 2px of that, so a window sits one gap plus 2px from the screen edge. Sides the wide state leaves out repeat
 `programs.niri.settings.layout.struts`, because a later `struts` block replaces the earlier
 one whole. niri reloads the file on change. The `struts` bind group puts the toggle on
 `Mod+T`.
@@ -121,8 +121,8 @@ output names in `programs.niri.settings.outputs`:
 
 ```nix
 programs.niri.strutToggle.wideOutputs = {
-  "DP-3".left = -40;
-  "DP-2".right = -40;
+  "DP-3".left = -38;
+  "DP-2".right = -38;
 };
 ```
 

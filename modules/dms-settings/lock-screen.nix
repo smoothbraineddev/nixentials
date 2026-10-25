@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     lockScreenShowPowerActions = true;
     lockBeforeSuspend = true;
     lockScreenWidgetInstances = [

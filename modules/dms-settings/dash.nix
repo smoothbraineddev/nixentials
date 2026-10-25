@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, ... }:
 {
-  programs.dank-material-shell.settings = {
+  programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
     dashTabs = [
       {
         enabled = true;
@@ -103,18 +103,12 @@
       calendar = {
         weekends = true;
       };
-      clock = {
-        seconds = false;
-      };
       media = {
         artStyle = "circle";
         playerStyle = "material";
       };
       overview = {
         panelColumns = 8;
-      };
-      wallpaper = {
-        panelRows = 5;
       };
       weather = {
         city = true;
