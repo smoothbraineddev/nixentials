@@ -9,6 +9,7 @@
       source = "${../../icons/nix-logo-gold.png}";
       width = 45;
       padding = {
+        top = 2;
         left = 2;
         right = 4;
       };
