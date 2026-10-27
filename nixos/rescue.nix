@@ -6,6 +6,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 let
@@ -42,6 +43,30 @@ in
       command = "niri-session";
       user = cfg.user;
     };
+
+    # Forensics and recovery on top of ./portable.nix's disk tools: imaging, carving, file
+    # system timelines, hashes, memory dumps, BitLocker volumes and Windows passwords.
+    environment.systemPackages = with pkgs; [
+      chntpw
+      dc3dd
+      dislocker
+      exiftool
+      ext4magic
+      f3
+      foremost
+      fsarchiver
+      guymager
+      hashdeep
+      hexyl
+      libewf
+      nwipe
+      partclone
+      sdparm
+      sleuthkit
+      ssdeep
+      volatility3
+      yara
+    ];
 
     # The installer can read ZFS pools, but the image itself never boots from one.
     boot.zfs.forceImportRoot = false;
