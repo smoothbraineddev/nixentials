@@ -73,7 +73,7 @@
     islandRouteLauncher = "island";
     islandRoutePowerMenu = "island";
     islandSatelliteBackground = false;
-    islandSatelliteGap = 0;
+    islandSatelliteGap = 48;
     islandSatelliteGothCorners = false;
     islandSatellitePosition = "edges";
     islandSystemOsd = true;
