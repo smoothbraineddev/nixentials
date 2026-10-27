@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # zoxide's doctor check runs inside the `cd` function and reads $_ZO_DOCTOR
   # at call time. Set it in .zshenv (via sessionVariables) so it applies to
@@ -49,53 +49,55 @@
       }
     ];
 
-    initContent = ''
-      bindkey -v
+    initContent = lib.mkMerge [
+      ''
+        bindkey -v
 
-      cargo() {
-        if [[ "$1" == "clippy" ]]; then
-          command cargo clippy "''${@:2}" -- -W clippy::pedantic -W clippy::nursery
-        else
-          command cargo "$@"
-        fi
-      }
+        cargo() {
+          if [[ "$1" == "clippy" ]]; then
+            command cargo clippy "''${@:2}" -- -W clippy::pedantic -W clippy::nursery
+          else
+            command cargo "$@"
+          fi
+        }
 
-      zstyle ':fzf-tab:*' fzf-command fzf
-      zstyle ':fzf-tab:*' switch-group ',' '.'
-      zstyle ':fzf-tab:*' query-string disabled
-      zstyle ':fzf-tab:complete:*' fzf-preview 'bat --color=always --style=numbers $realpath 2>/dev/null || ls --color=always $realpath 2>/dev/null'
+        zstyle ':fzf-tab:*' fzf-command fzf
+        zstyle ':fzf-tab:*' switch-group ',' '.'
+        zstyle ':fzf-tab:*' query-string disabled
+        zstyle ':fzf-tab:complete:*' fzf-preview 'bat --color=always --style=numbers $realpath 2>/dev/null || ls --color=always $realpath 2>/dev/null'
 
-      _starship_transient() {
-        local _rc=$?
-        local _p="$PROMPT" _rp="$RPROMPT"
-        if [[ $_rc -eq 0 ]]; then
-          PROMPT=$'%B%F{green}❯%f%b '
-        else
-          PROMPT=$'%B%F{red}❯%f%b '
-        fi
-        RPROMPT=""
-        zle reset-prompt
-        PROMPT="$_p" RPROMPT="$_rp"
-        zle .accept-line
-      }
-      zle -N accept-line _starship_transient
+        _starship_transient() {
+          local _rc=$?
+          local _p="$PROMPT" _rp="$RPROMPT"
+          if [[ $_rc -eq 0 ]]; then
+            PROMPT=$'%B%F{green}❯%f%b '
+          else
+            PROMPT=$'%B%F{red}❯%f%b '
+          fi
+          RPROMPT=""
+          zle reset-prompt
+          PROMPT="$_p" RPROMPT="$_rp"
+          zle .accept-line
+        }
+        zle -N accept-line _starship_transient
 
-      # Cursor shape per vi mode: block in normal, underline in insert
-      zle-line-init() { echo -ne '\e[4 q'; }
-      zle -N zle-line-init
-      zle-keymap-select() {
-        case $KEYMAP in
-          vicmd)      echo -ne '\e[2 q' ;;  # block (normal mode)
-          viins|main) echo -ne '\e[4 q' ;;  # underline (insert mode)
-        esac
-        zle reset-prompt
-      }
-      zle -N zle-keymap-select
+        # Cursor shape per vi mode: block in normal, underline in insert
+        zle-line-init() { echo -ne '\e[4 q'; }
+        zle -N zle-line-init
+        zle-keymap-select() {
+          case $KEYMAP in
+            vicmd)      echo -ne '\e[2 q' ;;  # block (normal mode)
+            viins|main) echo -ne '\e[4 q' ;;  # underline (insert mode)
+          esac
+          zle reset-prompt
+        }
+        zle -N zle-keymap-select
 
-      ZLE_RPROMPT_INDENT=0
+        ZLE_RPROMPT_INDENT=0
+      ''
 
-      # Startup
-      (( $+commands[fastfetch] )) && fastfetch
-    '';
+      # Startup, as the last lines of .zshrc, after the aliases, so it can run the c alias.
+      (lib.mkOrder 2000 "c")
+    ];
   };
 }

@@ -13,7 +13,9 @@ let
 in
 {
   programs.zsh.shellAliases = shared // {
-    c = "clear; (( $+commands[fastfetch] )) && fastfetch";
+    # Clear, then fastfetch with an empty line above and below, so the logo does not touch
+    # the prompt. ./zsh.nix runs it at startup.
+    c = "clear; (( $+commands[fastfetch] )) && { echo; fastfetch; echo; }";
     x = "extract";
 
     ls = "eza";
