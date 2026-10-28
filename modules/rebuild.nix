@@ -10,11 +10,18 @@
 # With `builder` set, rebuild first checks that SSH reaches it. If it does, the build is
 # offloaded (nixosModules.remote-builder) and only `localJobs` builds run here; otherwise
 # everything builds here. `rebuild-local` always builds here.
+#
+# Also: `rebuild-boot` and `rebuild-test` (nh os boot / test, with -o too), `rollback`,
+# `generations` to list the system generations, and `gen-diff OLD NEW` to compare two.
 { config, lib, ... }:
 let
   cfg = config.nixentials.rebuild;
   inherit (lib) mkOption types;
   all = lib.concatStringsSep " " cfg.inputs;
+  aliases = {
+    generations = "sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | less +G";
+    rollback = "nh os rollback";
+  };
 in
 {
   options.nixentials.rebuild = {
@@ -46,6 +53,9 @@ in
   };
 
   config = {
+    programs.zsh.shellAliases = aliases;
+    programs.nushell.shellAliases = aliases;
+
     programs.zsh.initContent = ''
       # Sets $reply to the arguments with the -o/--override shorthand expanded.
       _rebuild_args() {
@@ -73,6 +83,25 @@ in
               ;;
           esac
         done
+      }
+
+      rebuild-boot() {
+        _rebuild_args "$@" || return
+        nh os boot --keep-going "''${reply[@]}"
+      }
+
+      rebuild-test() {
+        _rebuild_args "$@" || return
+        nh os test --keep-going "''${reply[@]}"
+      }
+
+      # Compare two system generations: gen-diff 141 142
+      gen-diff() {
+        if [[ $# -ne 2 ]]; then
+          echo "Usage: gen-diff <old-gen> <new-gen>"
+          return 1
+        fi
+        nix store diff-closures /nix/var/nix/profiles/system-{$1,$2}-link
       }
     ''
     + (
@@ -125,6 +154,19 @@ in
           }
         }
         $out
+      }
+
+      def --wrapped rebuild-boot [...args] {
+        ^nh os boot --keep-going ...(rebuild-args $args)
+      }
+
+      def --wrapped rebuild-test [...args] {
+        ^nh os test --keep-going ...(rebuild-args $args)
+      }
+
+      # Compare two system generations: gen-diff 141 142
+      def gen-diff [old: int, new: int] {
+        nix store diff-closures $"/nix/var/nix/profiles/system-($old)-link" $"/nix/var/nix/profiles/system-($new)-link"
       }
     ''
     + (

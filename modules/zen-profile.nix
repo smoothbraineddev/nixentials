@@ -39,7 +39,10 @@ let
   '';
 in
 {
-  imports = [ ./zen-theme.nix ];
+  imports = [
+    ./zen-diff.nix
+    ./zen-theme.nix
+  ];
 
   # Zen creates the profile on first launch and records its directory in profiles.ini,
   # so home.file cannot name the target. Until that file exists this does nothing:

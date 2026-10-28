@@ -61,6 +61,8 @@
         zen-theme = ./modules/zen-theme.nix;
         zen-profile = ./modules/zen-profile.nix;
         rebuild = ./modules/rebuild.nix;
+        dms-diff = ./modules/dms-diff.nix;
+        zen-diff = ./modules/zen-diff.nix;
       };
 
       nixosModules = {
@@ -69,6 +71,7 @@
         rescue = ./nixos/rescue.nix;
         installer = ./nixos/installer.nix;
         remote-builder = ./nixos/remote-builder.nix;
+        watchlist = ./nixos/watchlist.nix;
       };
     };
 }
