@@ -7,7 +7,8 @@
 # checkout, otherwise zoxide's best match for NAME. `-o all` stands for every input in
 # `inputs`. This hides nh's own -o (--out-link).
 #
-# With `builder` set, rebuild first checks that SSH reaches it. If it does, the build is
+# With `builder` set, rebuild first checks that its SSH server answers (ssh-keyscan, which
+# needs no login). If it does, the build is
 # offloaded (nixosModules.remote-builder) and only `localJobs` builds run here; otherwise
 # everything builds here. `rebuild-local` always builds here.
 #
@@ -40,7 +41,7 @@ in
       type = types.nullOr types.str;
       default = null;
       example = "desktop";
-      description = "SSH host of a remote builder to probe before offloading, or null for none.";
+      description = "Host of a remote builder whose SSH server is probed before offloading, or null for none.";
     };
     localJobs = mkOption {
       type = types.int;
@@ -116,7 +117,7 @@ in
         ''
           rebuild() {
             _rebuild_args "$@" || return
-            if ssh -o ConnectTimeout=3 -o BatchMode=yes ${cfg.builder} true 2>/dev/null; then
+            if [[ -n $(ssh-keyscan -T 3 ${cfg.builder} 2>/dev/null) ]]; then
               print -P '%F{cyan}▸%f ${cfg.builder} reachable — offloading'
               nh os switch --keep-going --max-jobs ${toString cfg.localJobs} "''${reply[@]}"
             else
@@ -180,8 +181,8 @@ in
         ''
           def --wrapped rebuild [...args] {
             let args = rebuild-args $args
-            let probe = (^ssh -o ConnectTimeout=3 -o BatchMode=yes ${cfg.builder} true | complete | get exit_code)
-            if $probe == 0 {
+            let probe = (^ssh-keyscan -T 3 ${cfg.builder} | complete | get stdout | str trim)
+            if $probe != "" {
               print "▸ ${cfg.builder} reachable — offloading"
               ^nh os switch --keep-going --max-jobs ${toString cfg.localJobs} ...$args
             } else {
