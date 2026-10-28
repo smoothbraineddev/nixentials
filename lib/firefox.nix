@@ -38,6 +38,7 @@ in
     bitwarden = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
     darkreader = "addon@darkreader.org";
     noscript = "{73a6fe31-595d-460b-a920-fcc0f8843232}";
+    oledBlackGrey = "{7c598a42-0f22-4dbc-a4c0-9b3d8d7cc6a5}"; # theme
     ublock = "uBlock0@raymondhill.net";
     vimium = "{d7742d87-e61d-4b78-b8a1-b469842139fa}";
   };
