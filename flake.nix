@@ -35,6 +35,7 @@
       lib = {
         colors = import ./lib/colors.nix;
         dms = import ./lib/dms.nix;
+        firefox = import ./lib/firefox.nix;
         niri = import ./lib/niri.nix;
         zen = import ./lib/zen.nix;
       };

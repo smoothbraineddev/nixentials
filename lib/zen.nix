@@ -1,9 +1,12 @@
 # Zen prefs, mods and policies shipped as data, for the same reason as ./niri.nix. The
 # profile has one user.js, so a consumer that wants other prefs builds its own file
 # from `toUserJs (allPrefs // { ... })`, or from the groups it wants, instead of
-# importing homeModules.zen-profile.
+# importing homeModules.zen-profile. The privacy prefs, the add-ons and the renderer are
+# ./firefox.nix's, shared with other Firefox-based browsers.
 #
 let
+  firefox = import ./firefox.nix;
+
   prefs = {
     core = {
       # Switches on chrome/userChrome.css, which is where the theme loads from.
@@ -12,26 +15,7 @@ let
       "zen.welcome-screen.seen" = true;
     };
 
-    privacy = {
-      "browser.contentblocking.category" = "custom";
-      "privacy.fingerprintingProtection" = true;
-      "privacy.donottrackheader.enabled" = true;
-      "dom.security.https_only_mode" = true;
-
-      # No speculative connections to links that were not clicked
-      "network.dns.disablePrefetch" = true;
-      "network.prefetch-next" = false;
-      "network.http.speculative-parallel-limit" = 0;
-
-      # DoH off, so DNS goes through the system resolver
-      "network.trr.mode" = 5;
-      "doh-rollout.disable-heuristics" = true;
-
-      # Nothing sensitive is stored in the profile
-      "signon.rememberSignons" = false;
-      "extensions.formautofill.creditCards.enabled" = false;
-      "privacy.clearOnShutdown_v2.formdata" = true;
-    };
+    inherit (firefox.prefs) privacy;
 
     layout = {
       "sidebar.visibility" = "hide-sidebar";
@@ -116,30 +100,17 @@ in
     "599a1599-e6ab-4749-ab22-de533860de2c" = "Pimp your PiP";
   };
 
-  # Enterprise policies. They belong to the package, so the consumer passes them to
-  # wrapFirefox as `extraPolicies` (see the README). Zen installs these add-ons from
-  # addons.mozilla.org on first start and keeps them updated. `normal_installed` lets
-  # the user disable one, which NoScript needs on a site it breaks. Keys are the
-  # add-on IDs from the AMO API.
-  policies.ExtensionSettings =
-    builtins.mapAttrs
-      (id: _: {
-        installation_mode = "normal_installed";
-        install_url = "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
-      })
-      {
-        "uBlock0@raymondhill.net" = "uBlock Origin";
-        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = "Bitwarden";
-        "addon@darkreader.org" = "Dark Reader";
-        "{73a6fe31-595d-460b-a920-fcc0f8843232}" = "NoScript";
-      };
+  # Enterprise policies for the Zen package, which installs these add-ons from AMO. The
+  # consumer passes them to wrapFirefox as `extraPolicies` (see the README).
+  policies = firefox.extensionPolicies (
+    with firefox.addons;
+    [
+      bitwarden
+      darkreader
+      noscript
+      ublock
+    ]
+  );
 
-  toUserJs =
-    prefs:
-    builtins.concatStringsSep "\n" (
-      map (name: "user_pref(${builtins.toJSON name}, ${builtins.toJSON prefs.${name}});") (
-        builtins.attrNames prefs
-      )
-    )
-    + "\n";
+  inherit (firefox) toUserJs;
 }

@@ -30,11 +30,15 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.niri.binds` | Bind groups as data, keyed by section: `overview`, `terminal`, `lock`, `windows`, `focus`, `movement`, `columns`, `monitors`, `workspaces`, `wheel`, `numbered`, `sizing`, `system` and `struts` |
 | `lib.niri.rules` | Window-rule groups as data: `defaults` (rounded corners), `inactive` (85% opacity) and `wezterm` (its column width and opacity) |
 | `lib.niri.allBinds`, `lib.niri.allRules` | Every bind group merged and every rule group concatenated, as `niri-binds` and `niri-rules` apply them |
-| `lib.zen.prefs` | The Zen prefs for `user.js` as data, in the groups `core`, `privacy`, `layout` and `mods` |
+| `lib.firefox.prefs.privacy` | Privacy prefs for any Firefox-based browser except Tor Browser, whose own defaults keep its users alike |
+| `lib.firefox.addons` | Add-on IDs by short name: `bitwarden`, `darkreader`, `noscript`, `ublock`, `vimium` |
+| `lib.firefox.extensionPolicies` | `ids -> policies`, the `ExtensionSettings` policy that installs those add-ons from addons.mozilla.org, for wrapFirefox's `extraPolicies` |
+| `lib.firefox.toUserJs`, `lib.firefox.toAutoconfig` | `prefs -> string`, renders an attrset as `user_pref(...)` lines for a profile's `user.js`, or as `pref(...)` lines for the package's autoconfig (`extraPrefs` of wrapFirefox and tor-browser) |
+| `lib.zen.prefs` | The Zen prefs for `user.js` as data, in the groups `core`, `privacy` (`lib.firefox.prefs.privacy`), `layout` and `mods` |
 | `lib.zen.allPrefs` | Every group of `lib.zen.prefs`, merged |
 | `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
-| `lib.zen.policies` | Enterprise policies for the Zen package: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
-| `lib.zen.toUserJs` | `prefs -> string`, renders an attrset as `user_pref(...)` lines |
+| `lib.zen.policies` | Enterprise policies for the Zen package, from `lib.firefox.extensionPolicies`: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
+| `lib.zen.toUserJs` | `lib.firefox.toUserJs` |
 | `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi |
 | `homeModules.editor` | helix settings, languages, theme |
 | `homeModules.niri-core` | animations, input, layout, misc, startup, theme, and the strut toggle (see below). No binds, rules or outputs |
@@ -54,7 +58,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 
 ## Layout
 
-- `lib/` holds data and helpers, no modules: `colors.nix`, `niri.nix` and `zen.nix`.
+- `lib/` holds data and helpers, no modules: `colors.nix`, `dms.nix`, `firefox.nix`, `niri.nix` and `zen.nix`.
 - `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`, `dms-settings`); the rest are flat files. `dms-settings` has one file per section of the DMS settings sidebar.
 - `nixos/` holds the NixOS modules: `session.nix`, `portable.nix`, `rescue.nix` and `installer.nix`.
 - `patches/` holds the niri patch that `nixosModules.session` applies.
