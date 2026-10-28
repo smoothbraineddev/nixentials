@@ -51,16 +51,18 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.dms-calendar` | Runs Dux Calendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
+| `homeModules.rebuild` | A `rebuild` shell function for zsh and Nushell: `nh os switch --keep-going`, plus `-o NAME` to build a flake input from its checkout (`--override-input NAME git+file://DIR`, DIR being `~/<nixentials.rebuild.reposDir>/NAME`, default `~/Repos`, or zoxide's best match). `-o all` stands for the inputs in `nixentials.rebuild.inputs`. With `nixentials.rebuild.builder` set to an SSH host, rebuild offloads when that host answers within 3 s and keeps `localJobs` (default 2) builds here; `rebuild-local` then always builds here |
 | `nixosModules.session` | niri with the strut patch (see below), xwayland, xwayland-satellite, portals, greetd + tuigreet, gnome-keyring, zsh, dconf (GTK theming needs it), gvfs and tumbler, JetBrains Mono Nerd Font, session env vars |
 | `nixosModules.portable` | For a system that boots on any x86_64 machine, like an install on a USB stick: initrd drivers for USB, NVMe and SATA disks and USB keyboards, all redistributable firmware, both CPU microcodes, no NVRAM boot entries, zram swap, NetworkManager, and tools to inspect and repair disks (gparted, smartmontools, nvme-cli, ddrescue, testdisk and more) |
 | `nixosModules.rescue` | A live ISO with the graphical session: nixpkgs' minimal installer plus `session` and `portable`. greetd logs `nixentials.rescue.user` (default `nixos`) into niri without a password. It adds forensics and recovery tools: sleuthkit, guymager, dc3dd and libewf for imaging, foremost for carving, volatility3, dislocker, chntpw and more. The user's home config stays with the consumer. Build `config.system.build.isoImage` |
 | `nixosModules.installer` | A thin install ISO: nixpkgs' minimal installer plus `portable`, with flakes, NetworkManager on iwd, SSH with keys only, and the install tools, including `disko-install`. The console logs in `nixentials.installer.user` (default `nixos`) without a password. No system closure; installs fetch from substituters. Build `config.system.build.isoImage` |
+| `nixosModules.remote-builder` | Distributed builds over SSH, as a template. Client: `nixentials.remoteBuilder.builders.<name>` (host key, user, systems, jobs, features) becomes a build machine with its host key pinned and an SSH config that fails fast when it is offline; the daemon logs in with root's `/root/.ssh/nix-builder`. Server: `nixentials.remoteBuilder.server` lets `clientKeys` log in as `user` and makes that user trusted. The module's header has the key setup |
 
 ## Layout
 
 - `lib/` holds data and helpers, no modules: `colors.nix`, `dms.nix`, `firefox.nix`, `niri.nix` and `zen.nix`.
 - `modules/` holds the home-manager modules. An output with several files gets a directory (`terminal`, `editor`, `niri`, `toolkit`, `dms-settings`); the rest are flat files. `dms-settings` has one file per section of the DMS settings sidebar.
-- `nixos/` holds the NixOS modules: `session.nix`, `portable.nix`, `rescue.nix` and `installer.nix`.
+- `nixos/` holds the NixOS modules: `session.nix`, `portable.nix`, `rescue.nix`, `installer.nix` and `remote-builder.nix`.
 - `patches/` holds the niri patch that `nixosModules.session` applies.
 - `icons/` holds the fastfetch logo.
 

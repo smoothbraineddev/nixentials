@@ -60,6 +60,7 @@
         dms-calendar = ./modules/dms-calendar.nix;
         zen-theme = ./modules/zen-theme.nix;
         zen-profile = ./modules/zen-profile.nix;
+        rebuild = ./modules/rebuild.nix;
       };
 
       nixosModules = {
@@ -67,6 +68,7 @@
         portable = ./nixos/portable.nix;
         rescue = ./nixos/rescue.nix;
         installer = ./nixos/installer.nix;
+        remote-builder = ./nixos/remote-builder.nix;
       };
     };
 }
