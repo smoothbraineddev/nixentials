@@ -117,7 +117,7 @@ in
     wideStruts = lib.mkOption {
       type = sides;
       default = {
-        left = -38;
+        left = 23;
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
@@ -130,7 +130,7 @@ in
       type = lib.types.attrsOf sides;
       default = { };
       example = {
-        "DP-3".left = -38;
+        "DP-3".left = 23;
       };
       description = ''
         Struts for the wide state per output, keyed by the name the output has in
