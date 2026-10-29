@@ -56,6 +56,11 @@
         order = [ ];
         widgets = [
           {
+            enabled = true;
+            id = "dock_launcher";
+            widgetId = "dockLauncher";
+          }
+          {
             appsDockColorizeActive = false;
             enabled = true;
             id = "dock_apps";
