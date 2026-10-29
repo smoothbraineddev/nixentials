@@ -6,6 +6,6 @@
     notificationPopupPrivacyMode = true;
     notificationCompactMode = true;
     notificationShowTimeoutBar = true;
-    notificationFocusedMonitor = true;
+    notificationFocusedMonitor = false;
   };
 }
