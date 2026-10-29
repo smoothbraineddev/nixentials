@@ -1,6 +1,6 @@
-# DMS config shipped as data. The dms-settings module sets barConfigs to [ bar ], and a
-# consumer replaces the list whole, so this is what a consumer builds its own bars from
-# with `bar // { ... }`.
+# DMS config shipped as data. The dms-settings module sets barConfigs to [ bar ] and
+# dockConfigs to [ dock ], and a consumer replaces each list whole, so this is what a
+# consumer builds its own bars and docks from with `bar // { ... }` and `dock // { ... }`.
 {
   bar = {
     autoHide = false;
@@ -150,5 +150,78 @@
     islandHighContrast = false;
     surfaceCustomColor = "#25003b";
     widgetStyle = "pills";
+  };
+
+  dock = {
+    id = "dock";
+    name = "Dock";
+    enabled = true;
+    screenPreferences = [
+      "all"
+    ];
+    showOnLastDisplay = true;
+    position = 1;
+    mode = "compact";
+    taskbarAlign = "center";
+    widgetExpansion = "inline";
+    iconSize = 32;
+    spacing = 8;
+    itemSpacing = 8;
+    margin = 8;
+    bottomGap = 0;
+    transparency = 0;
+    followInterfaceStyle = false;
+    autoHide = false;
+    smartAutoHide = true;
+    useOverlayLayer = true;
+    editOnRightClick = false;
+    showOnFullscreen = true;
+    openOnOverview = true;
+    groupByApp = true;
+    separatePinnedAndRunningApps = false;
+    restoreSpecialWorkspaceOnClick = false;
+    isolateDisplays = false;
+    indicatorStyle = "circle";
+    borderEnabled = false;
+    borderColor = "surfaceText";
+    borderOpacity = 1;
+    borderThickness = 1;
+    launcherEnabled = false;
+    launcherLogoMode = "os";
+    launcherLogoCustomPath = "";
+    launcherLogoColorOverride = "";
+    launcherLogoSizeOffset = 0;
+    launcherLogoBrightness = 0.5;
+    launcherLogoContrast = 1;
+    maxVisibleApps = 0;
+    maxVisibleRunningApps = 0;
+    showOverflowBadge = true;
+    showTrash = true;
+    trashFileManager = "nautilus";
+    trashCustomCommand = "";
+    magnification = true;
+    magnificationScale = 125;
+    magnificationProfile = "parabolic";
+    magnificationExpand = true;
+    order = [ ];
+    widgets = [
+      {
+        enabled = true;
+        id = "dock_launcher";
+        widgetId = "dockLauncher";
+      }
+      {
+        appsDockColorizeActive = false;
+        enabled = true;
+        id = "dock_apps";
+        runningAppsCurrentWorkspace = false;
+        widgetId = "appsDock";
+      }
+      {
+        enabled = true;
+        id = "dock_trash";
+        widgetId = "dockTrash";
+      }
+    ];
   };
 }
