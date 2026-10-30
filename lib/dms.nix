@@ -44,7 +44,7 @@
         id = "weather";
       }
       {
-        enabled = true;
+        enabled = false;
         id = "status";
       }
       {
@@ -110,7 +110,7 @@
         id = "cpuUsage";
       }
       {
-        enabled = false;
+        enabled = true;
         id = "controlCenterButton";
         showMicPercent = true;
       }

@@ -1,7 +1,7 @@
 # Patches the DMS package for the island bar in dms-settings. The island gets smaller gaps
 # between its home groups and at its ends. Its clock gets a fixed size and weight, its weather
-# icon a fixed size and a small lift, and its weather, media and control center views open
-# on hover. It also draws the dash metric sparklines behind the
+# icon a fixed size and a small lift, its temperature digits sit on the center line, and its
+# weather and media views open on hover. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
 # update that moves those lines fails the build. Needs the dank-material-shell home module.
@@ -13,14 +13,15 @@ let
   islandGroupGap = 4;
   islandEdgeGap = 8;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
-  islandClockFontSize = 15;
+  islandClockFontSize = 20;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
+  # The temperature below it is padded left by the width of its trailing "°", so the digits sit
+  # on the center line.
   islandWeatherIconSize = 20;
   # Moves the island's weather icon and temperature up, in px. The groups' boxes are islandGroupGap
-  # apart, but the icon's and text's own padding differs at each end: at 0 the visible gaps are 12
-  # above the icon and 7 below the temperature.
-  islandWeatherLift = 3;
+  # apart, but the icon's own padding makes the visible gap above it larger than the clock's gaps.
+  islandWeatherLift = 0;
   # Dash clock card digits. "Google Sans Flex" equals DMS's defaultFontFamily, so DClockFace uses
   # the variable face and sets the weight through its wght axis. Any other family gets a static face.
   dashClockFontFamily = "Google Sans Flex";
@@ -57,21 +58,24 @@ in
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: group.vertical && group.isWeather ? -${toString islandWeatherLift} : 0" \
           --replace-fail \
+            "text: WeatherService.currentTempText()" \
+            "text: WeatherService.currentTempText()
+                id: islandTempText
+                leftPadding: degreeMetrics.advanceWidth
+
+                TextMetrics {
+                    id: degreeMetrics
+                    font: islandTempText.font
+                    text: \"°\"
+                }" \
+          --replace-fail \
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)" \
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)
 
                 Timer {
-                    running: (slotArea.group.isWeather || slotArea.group.isStatus || slotArea.group.isMedia && root.controller.mediaAvailable) && slotArea.containsMouse
+                    running: (slotArea.group.isWeather || slotArea.group.isMedia && root.controller.mediaAvailable) && slotArea.containsMouse
                     interval: root.controller.hoverOpenDelay
-                    onTriggered: {
-                        if (slotArea.group.isStatus) {
-                            // The control center opens on the section a click last asked for.
-                            root.controller.controlCenterPendingSection = \"\";
-                            root.controller.requestHoverPeek(\"controlcenter\");
-                            return;
-                        }
-                        root.controller.requestHoverPeek(slotArea.group.isMedia ? \"media\" : \"weather\");
-                    }
+                    onTriggered: root.controller.requestHoverPeek(slotArea.group.isMedia ? \"media\" : \"weather\")
                 }"
 
         # homeSlotMargin pads both ends of the island; HomeCompact's groupSpacing, now read only
@@ -81,9 +85,9 @@ in
             "readonly property real homeSlotMargin: homeCompactTight ? Theme.spacingS : Theme.spacingM" \
             "readonly property real homeSlotMargin: ${toString islandEdgeGap}"
 
-        # Hovering the island's weather, media or control center slot opens its view as a hover
-        # peek, the way hybrid mode peeks the home view. hoverExpanded makes the existing close
-        # timer collapse it when the pointer leaves the island. Without keyboard focus the peek does not take input
+        # Hovering the island's weather or media slot opens its view as a hover peek, the way
+        # hybrid mode peeks the home view. hoverExpanded makes the existing close timer collapse it
+        # when the pointer leaves the island. Without keyboard focus the peek does not take input
         # from the focused window. A click still opens it pinned with focus. Expanding leaves
         # mediaPreferred alone, so the island returns to the face picked with a right-click.
         substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
