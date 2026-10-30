@@ -13,7 +13,7 @@ let
   islandGroupGap = 4;
   islandEdgeGap = 8;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
-  islandClockFontSize = 20;
+  islandClockFontSize = 14;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
   # The temperature below it is padded left by the width of its trailing "°", so the digits sit
