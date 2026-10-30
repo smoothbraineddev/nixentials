@@ -38,6 +38,7 @@
         "extract"
         "git"
         "rust"
+        "systemd"
       ];
     };
 
