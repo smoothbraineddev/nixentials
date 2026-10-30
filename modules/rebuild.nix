@@ -1,10 +1,12 @@
 # `rebuild`, in zsh and nushell: `nh os switch --keep-going`, so one failure does not stop
 # the other builds, with two additions.
 #
-# `-o NAME` (or `--override NAME`, repeatable) builds the flake input NAME from its checkout:
-# it becomes --override-input NAME git+file://DIR, uncommitted changes to tracked files
+# `-o NAME...` (or `--override NAME...`) builds the flake inputs NAME from their checkouts:
+# each becomes --override-input NAME git+file://DIR, uncommitted changes to tracked files
 # included (a new file needs `git add` first). DIR is ~/<reposDir>/NAME if that is a git
-# checkout, otherwise zoxide's best match for NAME. `-o all` stands for every input in
+# checkout, otherwise zoxide's best match for NAME. The names run up to the next argument
+# that starts with `-` or holds a `/` or `#`, which input names cannot, so an installable
+# after them still reaches nh. `-o all`, or `-o` with no names, stands for every input in
 # `inputs`. This hides nh's own -o (--out-link).
 #
 # With `builder` set, rebuild first checks that its SSH server answers (ssh-keyscan, which
@@ -65,8 +67,13 @@ in
         while (( $# )); do
           case $1 in
             -o|--override)
-              local names=("$2")
-              [[ $2 == all ]] && names=(${all})
+              shift
+              local names=()
+              while (( $# )) && [[ $1 != -* && $1 != */* && $1 != *'#'* ]]; do
+                if [[ $1 == all ]]; then names+=(${all}); else names+=("$1"); fi
+                shift
+              done
+              (( ''${#names} )) || names=(${all})
               for name in "''${names[@]}"; do
                 dir=$HOME/${cfg.reposDir}/$name
                 [[ -d $dir/.git ]] || dir=$(zoxide query -- "$name" 2>/dev/null)
@@ -76,7 +83,6 @@ in
                 fi
                 reply+=(--override-input "$name" "git+file://$dir")
               done
-              shift 2
               ;;
             *)
               reply+=("$1")
@@ -85,6 +91,23 @@ in
           esac
         done
       }
+
+      # Completes the input names after -o from `inputs` and `all`, skipping the ones
+      # already given. fzf-tab, where loaded, shows them in fzf.
+      _rebuild() {
+        local i
+        for (( i = CURRENT - 1; i > 1; i-- )); do
+          [[ $words[i] == -* ]] || continue
+          if [[ $words[i] == (-o|--override) ]]; then
+            local -a seen=("''${(@)words[i+1,CURRENT-1]}") names=(${all} all)
+            compadd -F seen -a names
+            return
+          fi
+          break
+        done
+        compadd -- -o --override
+      }
+      compdef _rebuild rebuild rebuild-boot rebuild-test${lib.optionalString (cfg.builder != null) " rebuild-local"}
 
       rebuild-boot() {
         _rebuild_args "$@" || return
@@ -141,14 +164,19 @@ in
         while $i < ($args | length) {
           let arg = $args | get $i
           if $arg in [-o --override] {
-            let given = $args | get ($i + 1)
-            let names = if $given == "all" { [${all}] } else { [$given] }
+            $i += 1
+            mut names = []
+            while $i < ($args | length) and not ($args | get $i | str starts-with "-") and ($args | get $i) !~ '[/#]' {
+              let given = $args | get $i
+              $names = $names ++ (if $given == "all" { [${all}] } else { [$given] })
+              $i += 1
+            }
+            if ($names | is-empty) { $names = [${all}] }
             for name in $names {
               let repo = $env.HOME | path join ${cfg.reposDir} $name
               let dir = if ($repo | path join .git | path exists) { $repo } else { ^zoxide query -- $name | str trim }
               $out = $out ++ [--override-input $name $"git+file://($dir)"]
             }
-            $i += 2
           } else {
             $out = $out ++ [$arg]
             $i += 1
