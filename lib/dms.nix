@@ -44,7 +44,7 @@
         id = "weather";
       }
       {
-        enabled = false;
+        enabled = true;
         id = "status";
       }
       {
@@ -95,6 +95,10 @@
     rightWidgets = [
       {
         enabled = true;
+        id = "systemTray";
+      }
+      {
+        enabled = true;
         id = "memUsage";
       }
       {
@@ -106,11 +110,7 @@
         id = "cpuUsage";
       }
       {
-        enabled = true;
-        id = "systemTray";
-      }
-      {
-        enabled = true;
+        enabled = false;
         id = "controlCenterButton";
         showMicPercent = true;
       }
