@@ -92,8 +92,20 @@
               if success then pane:send_text(stdout) end
             end) },
 
-          -- New WezTerm window in the current pane's cwd.
+          -- New WezTerm window in the current pane's cwd. In a vmshell session whose
+          -- hooks set the user vars vmshell (the instance) and vmshell_cwd (the guest
+          -- directory), the new window opens a terminal in that VM and directory.
           { key = 'N', mods = 'CTRL|SHIFT', action = wezterm.action_callback(function(window, pane)
+              local vars = pane:get_user_vars()
+              if vars.vmshell and vars.vmshell ~= "" then
+                local args = { 'vmshell', vars.vmshell }
+                if vars.vmshell_cwd and vars.vmshell_cwd ~= "" then
+                  table.insert(args, '--cd')
+                  table.insert(args, vars.vmshell_cwd)
+                end
+                window:perform_action(wezterm.action.SpawnCommandInNewWindow { args = args }, pane)
+                return
+              end
               local url = pane:get_current_working_dir()
               window:perform_action(wezterm.action.SpawnCommandInNewWindow {
                 cwd = url and url.file_path or nil,
