@@ -40,7 +40,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
 | `lib.zen.policies` | Enterprise policies for the Zen package, from `lib.firefox.extensionPolicies`: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
 | `lib.zen.toUserJs` | `lib.firefox.toUserJs` |
-| `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search) |
+| `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search), `pull` and `push` (plain git; bare, in a flake, also the git inputs checked out in `~/Repos`) |
 | `homeModules.editor` | helix settings, languages, theme |
 | `homeModules.niri-core` | animations, input, layout, misc, startup, theme, and the strut toggle (see below). No binds, rules or outputs |
 | `homeModules.niri-binds` | Every `lib.niri.binds` group, applied |
