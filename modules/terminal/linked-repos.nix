@@ -6,8 +6,8 @@
 }:
 let
   # git pull, push, fetch and status. Bare, in a flake, they also cover the flake's git inputs that have
-  # a checkout at ~/Repos/<name>, so a repo moves together with the repos it builds from. Those
-  # follow nixentials.repoOrder, then the alphabet.
+  # a checkout at ~/Repos/<name>, so a repo moves together with the repos it builds from, and
+  # nixentials.extraRepos. Those follow nixentials.repoOrder, then the alphabet.
   command =
     name: text:
     pkgs.writeShellApplication {
@@ -18,6 +18,7 @@ let
       ];
       text = ''
         order=(${lib.escapeShellArgs config.nixentials.repoOrder})
+        extra=(${lib.escapeShellArgs config.nixentials.extraRepos})
 
         # Prints a repo's place in order, or the end of it for one that is not listed.
         rank() {
@@ -34,9 +35,12 @@ let
           local top name
           top=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
           [[ -f $top/flake.lock ]] || return 0
-          jq -r '.nodes[].original | select(.type? == "git") | .url' "$top/flake.lock" |
-            sed -E 's#.*/##; s#\.git$##' | sort -u | while read -r name; do
-            if [[ -e $HOME/Repos/$name/.git ]]; then echo "$(rank "$name") $name"; fi
+          {
+            jq -r '.nodes[].original | select(.type? == "git") | .url' "$top/flake.lock" |
+              sed -E 's#.*/##; s#\.git$##'
+            printf '%s\n' "''${extra[@]}"
+          } | sort -u | while read -r name; do
+            if [[ -e $HOME/Repos/$name/.git && $HOME/Repos/$name != "$top" ]]; then echo "$(rank "$name") $name"; fi
           done | sort -k1,1n -k2,2f | cut -d' ' -f2
         }
 
@@ -146,6 +150,13 @@ in
     default = [ ];
     example = [ "nixentials" ];
     description = "Repos in the order bare `pull`, `push`, `fetch` and `status` handle them. Others follow alphabetically.";
+  };
+
+  options.nixentials.extraRepos = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ ];
+    example = [ "docs" ];
+    description = "Repos in ~/Repos that bare `pull`, `push`, `fetch` and `status` cover from any flake, next to its git inputs.";
   };
 
   config.home.packages = [

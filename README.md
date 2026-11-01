@@ -40,7 +40,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
 | `lib.zen.policies` | Enterprise policies for the Zen package, from `lib.firefox.extensionPolicies`: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
 | `lib.zen.toUserJs` | `lib.firefox.toUserJs` |
-| `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search all of them), `scelp` (the same for the `systemd` plugin), `pull`, `push`, `fetch` and `status` (plain git; bare, in a flake, also the git inputs checked out in `~/Repos`; `push REMOTE` too, for the inputs that have that remote; bare `status` colors each remote by its state) |
+| `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search all of them), `scelp` (the same for the `systemd` plugin), `pull`, `push`, `fetch` and `status` (plain git; bare, in a flake, also the git inputs checked out in `~/Repos` and the repos in `nixentials.extraRepos`; `push REMOTE` too, for the inputs that have that remote; bare `status` colors each remote by its state) |
 | `homeModules.editor` | helix settings, languages, theme |
 | `homeModules.niri-core` | animations, input, layout, misc, startup, theme, and the strut toggle (see below). No binds, rules or outputs |
 | `homeModules.niri-binds` | Every `lib.niri.binds` group, applied |
