@@ -28,9 +28,9 @@ let
   # apart, but the icon's own padding makes the visible gap above it larger than the clock's gaps.
   islandWeatherLift = 0;
   # Dash clock card digits. "Google Sans Flex" equals DMS's defaultFontFamily, so DClockFace uses
-  # the variable face and sets the weight through its wght axis. Any other family gets a static face.
+  # the variable face and sets the weight (dashOptions.clock.weight in dms-settings) through its
+  # wght axis. Any other family gets a static face.
   dashClockFontFamily = "Google Sans Flex";
-  dashClockFontWeight = 900;
 in
 {
   programs.dank-material-shell = {
@@ -206,14 +206,13 @@ in
             "    onDgopAvailableChanged: {" \
             "    Component.onCompleted: addRef([\"cpu\", \"memory\", \"network\", \"disk\"])${"\n\n    "}onDgopAvailableChanged: {"
 
-        # DClockFace has fontFamily, weight and rounded properties, but ClockCard sets none of them.
-        # rounded: false sets the font's ROND axis to 0 (square corners) instead of 100.
+        # DClockFace has fontFamily and rounded properties that ClockCard does not set. rounded: false
+        # sets the font's ROND axis to 20 (squarer corners) instead of 100.
         substituteInPlace $out/share/quickshell/dms/Modules/DDash/Overview/ClockCard.qml \
           --replace-fail \
             "DClockFace {" \
             "DClockFace {
                     fontFamily: \"${dashClockFontFamily}\"
-                    weight: ${toString dashClockFontWeight}
                     rounded: false"
       '';
     });

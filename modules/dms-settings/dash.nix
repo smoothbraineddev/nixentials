@@ -103,6 +103,9 @@
       calendar = {
         weekends = true;
       };
+      clock = {
+        weight = 900;
+      };
       media = {
         artStyle = "circle";
         playerStyle = "material";
