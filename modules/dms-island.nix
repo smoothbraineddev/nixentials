@@ -1,7 +1,7 @@
 # Patches the DMS package for the island bar in dms-settings. The island gets smaller gaps
-# between its home groups and at its ends. Its clock gets a fixed size and weight, its weather
+# between its home groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and weight, its weather
 # icon a fixed size and a small lift, its temperature digits sit on the center line, and its
-# weather and media views open on hover. It also draws the dash metric sparklines behind the
+# slots open on hover. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
 # update that moves those lines fails the build. Needs the dank-material-shell home module.
@@ -9,9 +9,14 @@
 let
   # Gaps in the vertical island, in px. DMS uses Theme.spacingM (12px) for all of them and has no
   # setting; "Compact" also shrinks text and slots. islandGroupGap is the gap between groups,
-  # islandEdgeGap the space between the first and last group and the island's ends.
+  # except next to the clock, which has its own gap above (media) and below (weather).
+  # islandEdgeGapTop and islandEdgeGapBottom are the space between the first and last group and
+  # the island's ends.
   islandGroupGap = 4;
-  islandEdgeGap = 8;
+  islandClockGapAbove = 4;
+  islandClockGapBelow = 2;
+  islandEdgeGapTop = 8;
+  islandEdgeGapBottom = 6;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
   islandClockFontSize = 14;
   islandClockFontWeight = 900;
@@ -56,7 +61,15 @@ in
             "id: content
 
                     anchors.centerIn: parent
-                    anchors.verticalCenterOffset: group.vertical && group.isWeather ? -${toString islandWeatherLift} : 0" \
+                    anchors.verticalCenterOffset: (group.clockLead - group.clockTrail) / 2 - (group.vertical && group.isWeather ? ${toString islandWeatherLift} : 0)" \
+          --replace-fail \
+            "readonly property bool isClock: group.groupId === \"clock\"" \
+            "readonly property bool isClock: group.groupId === \"clock\"
+                readonly property real clockLead: group.vertical && group.isClock && group.slotIndex > 0 ? ${toString islandClockGapAbove} - ${toString islandGroupGap} : 0
+                readonly property real clockTrail: group.vertical && group.isClock && group.slotIndex < root.groupIds.length - 1 ? ${toString islandClockGapBelow} - ${toString islandGroupGap} : 0" \
+          --replace-fail \
+            "height: group.vertical ? content.implicitHeight : root.slotSize" \
+            "height: group.vertical ? content.implicitHeight + group.clockLead + group.clockTrail : root.slotSize" \
           --replace-fail \
             "text: WeatherService.currentTempText()" \
             "text: WeatherService.currentTempText()
@@ -73,23 +86,55 @@ in
             "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)
 
                 Timer {
-                    running: (slotArea.group.isWeather || slotArea.group.isMedia && root.controller.mediaAvailable) && slotArea.containsMouse
+                    running: slotArea.containsMouse && !slotArea.group.isWorkspaces && !slotArea.group.isTray && (!slotArea.group.isMedia || root.controller.mediaAvailable)
                     interval: root.controller.hoverOpenDelay
-                    onTriggered: root.controller.requestHoverPeek(slotArea.group.isMedia ? \"media\" : \"weather\")
+                    onTriggered: {
+                        const groupId = slotArea.group.groupId;
+                        switch (groupId) {
+                        case \"media\":
+                        case \"weather\":
+                            root.controller.requestHoverPeek(groupId);
+                            return;
+                        case \"notifications\":
+                            root.controller.consumeTransientNotification();
+                            root.controller.requestHoverPeek(\"notificationcenter\");
+                            return;
+                        case \"volume\":
+                        case \"brightness\":
+                            root.systemModel.open(groupId);
+                            return;
+                        }
+                        // The control center opens on the section a click last asked for.
+                        root.controller.controlCenterPendingSection = groupId === \"privacy\" ? \"audioInput\" : \"\";
+                        root.controller.requestHoverPeek(\"controlcenter\");
+                    }
                 }"
 
-        # homeSlotMargin pads both ends of the island; HomeCompact's groupSpacing, now read only
-        # by edgePad, follows it.
+        # homeSlotMargin pads both ends of the island equally, so it takes the mean of the two edge
+        # gaps and the column moves by half their difference. HomeCompact's groupSpacing, now read
+        # only by edgePad, follows it.
         substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
           --replace-fail \
             "readonly property real homeSlotMargin: homeCompactTight ? Theme.spacingS : Theme.spacingM" \
-            "readonly property real homeSlotMargin: ${toString islandEdgeGap}"
+            "readonly property real homeSlotMargin: (${toString islandEdgeGapTop} + ${toString islandEdgeGapBottom}) / 2"
+        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/Activities/HomeCompact.qml \
+          --replace-fail \
+            "id: compactColumn
 
-        # Hovering the island's weather or media slot opens its view as a hover peek, the way
-        # hybrid mode peeks the home view. hoverExpanded makes the existing close timer collapse it
-        # when the pointer leaves the island. Without keyboard focus the peek does not take input
-        # from the focused window. A click still opens it pinned with focus. Expanding leaves
+                anchors.centerIn: parent" \
+            "id: compactColumn
+
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: (${toString islandEdgeGapTop} - ${toString islandEdgeGapBottom}) / 2"
+
+        # Hovering an island slot opens what a click on it opens, as a hover peek, the way hybrid
+        # mode peeks the home view. hoverExpanded makes the existing close timer collapse it when
+        # the pointer leaves the island. Without keyboard focus the peek does not take input from
+        # the focused window. A click still opens it pinned with focus. Expanding leaves
         # mediaPreferred alone, so the island returns to the face picked with a right-click.
+        # Volume and brightness open their slider, which closes on its own timeout. Workspaces and
+        # tray have no view, and the media slot without a player would open the launcher, which
+        # needs focus, so those three stay click-only.
         substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
           --replace-fail \
             "    function requestNotificationCenter(shouldToggle) {" \
