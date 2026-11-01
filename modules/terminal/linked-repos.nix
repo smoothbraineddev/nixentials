@@ -6,7 +6,8 @@
 }:
 let
   # git pull, push, fetch and status. Bare, in a flake, they also cover the flake's git inputs that have
-  # a checkout at ~/Repos/<name>, so a repo moves together with the repos it builds from.
+  # a checkout at ~/Repos/<name>, so a repo moves together with the repos it builds from. Those
+  # follow nixentials.repoOrder, then the alphabet.
   command =
     name: text:
     pkgs.writeShellApplication {
@@ -16,6 +17,18 @@ let
         pkgs.jq
       ];
       text = ''
+        order=(${lib.escapeShellArgs config.nixentials.repoOrder})
+
+        # Prints a repo's place in order, or the end of it for one that is not listed.
+        rank() {
+          local entry place=0
+          for entry in "''${order[@]}"; do
+            if [[ $entry == "$1" ]]; then break; fi
+            place=$((place + 1))
+          done
+          echo "$place"
+        }
+
         linked() {
           [[ $# -eq 0 ]] || return 0
           local top name
@@ -23,8 +36,8 @@ let
           [[ -f $top/flake.lock ]] || return 0
           jq -r '.nodes[].original | select(.type? == "git") | .url' "$top/flake.lock" |
             sed -E 's#.*/##; s#\.git$##' | sort -u | while read -r name; do
-            if [[ -e $HOME/Repos/$name/.git ]]; then echo "$name"; fi
-          done
+            if [[ -e $HOME/Repos/$name/.git ]]; then echo "$(rank "$name") $name"; fi
+          done | sort -k1,1n -k2,2f | cut -d' ' -f2
         }
 
         result=0
@@ -63,27 +76,21 @@ let
   # changes, red with unstaged or untracked ones. Each remote, upstream first, is compared as of
   # the last fetch: green level, yellow ahead, red behind or diverged, gray without that branch.
   # Repos sort clean, then staged, then unstaged, so the ones needing work end next to the prompt.
-  # Within those groups they follow nixentials.statusOrder, then the alphabet.
+  # Within those groups they follow nixentials.repoOrder, then the alphabet.
   status = command "status" ''
-    order=(${lib.escapeShellArgs config.nixentials.statusOrder})
-
     paint() {
       if [[ -t 1 ]]; then printf '\033[%sm%s\033[0m' "$1" "$2"; else printf '%s' "$2"; fi
     }
 
     # Prints the sort key of a repo: its state (0 clean, 1 staged, 2 unstaged), its place in order.
     sort_key() {
-      local changes state=0 rank=0 entry
+      local changes state=0
       changes=$(git -C "$1" status --porcelain)
       if [[ -n $changes ]]; then
         state=1
         if grep -q '^.[^ ]' <<<"$changes"; then state=2; fi
       fi
-      for entry in "''${order[@]}"; do
-        if [[ $entry == "$2" ]]; then break; fi
-        rank=$((rank + 1))
-      done
-      echo "$state $rank $2 $1"
+      echo "$state $(rank "$2") $2 $1"
     }
 
     report() {
@@ -130,11 +137,11 @@ let
   '';
 in
 {
-  options.nixentials.statusOrder = lib.mkOption {
+  options.nixentials.repoOrder = lib.mkOption {
     type = lib.types.listOf lib.types.str;
     default = [ ];
     example = [ "nixentials" ];
-    description = "Repos in the order bare `status` lists them within each state. Others follow alphabetically.";
+    description = "Repos in the order bare `pull`, `push`, `fetch` and `status` handle them. Others follow alphabetically.";
   };
 
   config.home.packages = [
