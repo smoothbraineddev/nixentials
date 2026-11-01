@@ -54,11 +54,15 @@ let
     done
   '';
 
-  # Inputs go first, so the lock file here never pins a revision the remote lacks.
+  # Inputs go first, so the lock file here never pins a revision the remote lacks. A lone remote
+  # also goes to the inputs that have it; any other arguments are for this repo alone.
   push = command "push" ''
-    for name in $(linked "$@"); do
+    scope=("$@")
+    if [[ $# -eq 1 && $1 != -* ]]; then scope=(); fi
+    for name in $(linked "''${scope[@]}"); do
+      if [[ $# -eq 1 ]] && ! git -C "$HOME/Repos/$name" remote get-url "$1" &>/dev/null; then continue; fi
       echo "$name:"
-      git -C "$HOME/Repos/$name" push || result=1
+      git -C "$HOME/Repos/$name" push "$@" || result=1
     done
     git push "$@" || result=$?
   '';
