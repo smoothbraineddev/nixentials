@@ -84,7 +84,7 @@ rec {
     # Greens
     green = "#94d66e"; # lime green
     phosphor = "#00ff00"; # green-screen CRT green
-    phosphor_dim = "#00bf00"; # phosphor at amber's brightness, as tek tints ANSI 4
+    phosphor_dim = "#00bf00"; # phosphor at amber's brightness, as pick tints ANSI 4
     phosphor_mid = "#00cc00"; # between phosphor_dim and phosphor
     fern = "#6ea64f"; # darker green
     jade = "#5a9f81"; # muted green
