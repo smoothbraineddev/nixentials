@@ -92,7 +92,7 @@
     openOnOverview = true;
     popupGapsAuto = true;
     popupGapsManual = 4;
-    position = 2;
+    position = 3;
     rightWidgets = [
       {
         enabled = true;

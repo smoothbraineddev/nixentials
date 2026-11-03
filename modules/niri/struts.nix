@@ -117,13 +117,13 @@ in
     wideStruts = lib.mkOption {
       type = sides;
       default = {
-        left = 23;
+        right = -25;
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
-        programs.niri.settings.layout.struts. The dms-settings bar is a notch, which has no
-        outer gap, and reserves 38px, the width of its pill face. -38 gives all of that back,
-        so a window sits one gap from the screen edge.
+        programs.niri.settings.layout.struts. The dms-settings bar is a notch on the right
+        edge, which has no outer gap, and reserves its islandReserveThickness of 25px. -25
+        gives all of that back, so a window sits one gap from the screen edge.
       '';
     };
     wideOutputs = lib.mkOption {

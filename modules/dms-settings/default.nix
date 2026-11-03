@@ -1,5 +1,5 @@
 # A complete DMS config: theme, launcher, notifications, lock screen, cursor, niri layout,
-# dash, the island notch bar on the left edge of every screen, a dock with launcher, apps
+# dash, the island notch bar on the right edge of every screen, a dock with launcher, apps
 # and trash, the control center, idle timeouts, the feature toggles and clipboard settings.
 # Only values that differ from the DMS defaults. Every leaf is a mkDefault, so a consumer
 # overrides any key with a plain value; lists such as barConfigs and dockConfigs are

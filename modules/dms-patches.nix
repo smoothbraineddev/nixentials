@@ -2,8 +2,7 @@
 # groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and
 # weight, its weather icon a fixed size and a small lift, its temperature digits sit on the
 # center line, and its slots open on hover. It also draws the dash metric sparklines behind the
-# text, polls system stats every 1s with the dash closed too, and sets the dash clock font. A
-# dash opened from a right-side bar mirrors its overview cards.
+# text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
 # update that moves those lines fails the build. Needs the dank-material-shell home module.
 { options, ... }:
@@ -215,44 +214,6 @@ in
             "DClockFace {
                     fontFamily: \"${dashClockFontFamily}\"
                     rounded: false"
-
-        # A dash opened from a right-side bar mirrors its overview cards, so the first column sits
-        # at the screen edge on either side. DMS only mirrors them for right-to-left languages. The
-        # cards' contents keep their direction. The grid already handles a mirrored layout when
-        # dragging; keyboard order and resizing read I18n.isRtl directly, so they follow the flag too.
-        # The popout passes the bar through dashHost. The island's expanded home embeds the
-        # overview without a popout, so it sets rightEdge from its own edge.
-        substituteInPlace $out/share/quickshell/dms/Modules/DDash/OverviewTab.qml \
-          --replace-fail \
-            "property string preferredFocusId: \"calendar\"" \
-            "property string preferredFocusId: \"calendar\"
-            property var dashHost: null
-            property bool rightEdge: (dashHost?.effectiveBarPosition ?? 0) % 4 === SettingsData.Right
-            readonly property bool mirrorCards: I18n.isRtl !== rightEdge" \
-          --replace-fail \
-            "columnCap: root.columnCap" \
-            "columnCap: root.columnCap
-                mirror: root.mirrorCards"
-        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/Activities/HomeExpanded.qml \
-          --replace-fail \
-            "rowBudget: root.controller.dashboardRowBudget" \
-            "rowBudget: root.controller.dashboardRowBudget
-                rightEdge: root.controller.edge === \"right\""
-        substituteInPlace $out/share/quickshell/dms/Modules/DDash/Overview/DashCardGrid.qml \
-          --replace-fail \
-            "property string preferredFocusId: \"calendar\"" \
-            "property string preferredFocusId: \"calendar\"
-            property bool mirror: I18n.isRtl" \
-          --replace-fail \
-            "DashMetrics.gridRowUnit, I18n.isRtl, DashRegistry.isCardAvailable" \
-            "DashMetrics.gridRowUnit, root.mirror, DashRegistry.isCardAvailable" \
-          --replace-fail \
-            "(I18n.isRtl ? b.x - a.x : a.x - b.x)" \
-            "(root.mirror ? b.x - a.x : a.x - b.x)"
-        substituteInPlace $out/share/quickshell/dms/Widgets/DEditableGridSlot.qml \
-          --replace-fail \
-            "(point.x - resizeOrigin.x) * (I18n.isRtl ? -1 : 1)" \
-            "(point.x - resizeOrigin.x) * ((grid.slotLayout.mirror ?? I18n.isRtl) ? -1 : 1)"
       '';
     });
   };

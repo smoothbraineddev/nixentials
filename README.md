@@ -47,8 +47,8 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
 | `homeModules.toolkit` | gtk, qt |
 | `homeModules.dms-theme` | The DMS colour mapping only |
-| `homeModules.dms-settings` | A complete DMS config with defaults most people can live with: theme, launcher, notifications, lock screen, cursor, dash, the island notch bar on the left edge of every screen, a dock with launcher, apps and trash, a control center of built-in tiles, idle timeouts (lock and screen off after 15 min on AC, 5 min on battery, suspend after 15 min on battery only), the feature toggles and clipboard settings. Every value is a `mkDefault`, so a plain value overrides it, and lists such as `barConfigs` replace ours whole. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
-| `homeModules.dms-patches` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and below the clock, and 10px at its ends. Its clock is 14px at weight 900, its weather icon 15px, its temperature digits sit on the center line, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. A dash opened from a right-side bar mirrors its overview cards, so the first column sits at the screen edge. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-settings` | A complete DMS config with defaults most people can live with: theme, launcher, notifications, lock screen, cursor, dash, the island notch bar on the right edge of every screen, a dock with launcher, apps and trash, a control center of built-in tiles, idle timeouts (lock and screen off after 15 min on AC, 5 min on battery, suspend after 15 min on battery only), the feature toggles and clipboard settings. Every value is a `mkDefault`, so a plain value overrides it, and lists such as `barConfigs` replace ours whole. Plugins, `enable` and `systemd` stay with the consumer. Needs `inputs.dms.homeModules.dank-material-shell` |
+| `homeModules.dms-patches` | Patches the DMS package. The island gets an 8px gap between its home groups, 4px above and below the clock, and 10px at its ends. Its clock is 14px at weight 900, its weather icon 15px, its temperature digits sit on the center line, and its weather and media views open on hover. It draws the sparklines on wide dash metric tiles behind the text across the whole width and bottom two-thirds of the tile. It polls system stats every 1s instead of 3s, also with the dash closed, and sets the dash clock to Google Sans Flex at weight 900 with square corners. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.dms-calendar` | Runs Dux Calendar (`dcal`) as a user service and sets it as the DMS calendar backend, so the dash shows and creates events from Google, Microsoft, CalDAV, iCloud and iCal accounts. Accounts are added per machine with `dcal account add`. Needs `inputs.dms.homeModules.dank-material-shell` |
 | `homeModules.zen-theme` | The Zen CSS only |
 | `homeModules.zen-profile` | `zen-theme`, plus an activation step for the default Zen profile: a `user.js` from `lib.zen.allPrefs`, a `userChrome.css` loading the theme, and the mods in `lib.zen.mods` |
@@ -123,10 +123,10 @@ config niri-flake generates. It points at `~/.config/niri/struts-override.kdl` b
 path and sets `optional=true`, which needs niri 26.04.
 
 `niri-toggle-strut` switches that file between empty and the wide state. By default that
-is a `struts` block with `left -38`. The `dms-settings` bar is a notch, which has no outer
-gap, and its `islandReserveThickness` of 38px is the width of its pill face, so windows
-sit one gap from the notch. -38 gives all of it back, so a window sits one gap from the
-screen edge. Sides the wide state leaves out repeat
+is a `struts` block with `right -25`. The `dms-settings` bar is a notch on the right edge,
+which has no outer gap, and its `islandReserveThickness` of 25px is what it reserves, so
+windows sit one gap from the notch. -25 gives all of it back, so a window sits one gap from
+the screen edge. Sides the wide state leaves out repeat
 `programs.niri.settings.layout.struts`, because a later `struts` block replaces the earlier
 one whole. niri reloads the file on change. The `struts` bind group puts the toggle on
 `Mod+T`.
@@ -137,8 +137,8 @@ output names in `programs.niri.settings.outputs`:
 
 ```nix
 programs.niri.strutToggle.wideOutputs = {
-  "DP-3".left = -38;
-  "DP-2".right = -38;
+  "DP-3".left = -25;
+  "DP-2".right = -25;
 };
 ```
 

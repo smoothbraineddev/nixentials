@@ -29,70 +29,70 @@
     ];
     dashCards = [
       {
-        col = 0;
+        col = 6;
         h = 1;
         id = "clock";
         row = 0;
         w = 2;
       }
       {
-        col = 2;
+        col = 5;
         h = 1;
         id = "weather";
         row = 0;
         w = 1;
       }
       {
-        col = 3;
+        col = 2;
         h = 6;
         id = "notifications";
         row = 0;
         w = 3;
       }
       {
-        col = 0;
+        col = 5;
         h = 4;
         id = "calendar";
         row = 1;
         w = 3;
       }
       {
-        col = 6;
+        col = 0;
         h = 2;
         id = "wellbeing";
         row = 4;
         w = 2;
       }
       {
-        col = 0;
+        col = 5;
         h = 1;
         id = "media";
         row = 5;
         w = 3;
       }
       {
-        col = 6;
+        col = 0;
         h = 1;
         id = "network";
         row = 0;
         w = 2;
       }
       {
-        col = 6;
+        col = 0;
         h = 1;
         id = "cpu";
         row = 1;
         w = 2;
       }
       {
-        col = 6;
+        col = 0;
         h = 1;
         id = "memory";
         row = 2;
         w = 2;
       }
       {
-        col = 6;
+        col = 0;
         h = 1;
         id = "disk";
         row = 3;
