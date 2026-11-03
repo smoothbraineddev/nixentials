@@ -175,6 +175,10 @@
         ];
         panelColumns = 7;
       };
+      wellbeing = {
+        panelColumns = 5;
+        panelRows = 5;
+      };
     };
   };
 }

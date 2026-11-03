@@ -26,8 +26,7 @@
     island = true;
     islandAlongOffset = 0;
     islandCompactThickness = 36;
-    # The pill face is 2px wider than islandCompactThickness. DMS reserves 40px unless
-    # told otherwise, which leaves windows 2px farther from the notch than the gaps.
+    islandDashTabs = false;
     islandReserveThickness = 25;
     islandFloating = false;
     islandHomeLayout = [
@@ -63,7 +62,9 @@
     islandHoverCloseDelay = 150;
     islandHoverOpenDelay = 150;
     islandInteractionMode = "hybrid";
+    islandMediaAutoSwitch = false;
     islandMediaClockVisible = true;
+    islandMediaLyrics = true;
     islandNotch = true;
     islandNotificationExpand = true;
     islandNotificationPopups = false;
@@ -144,6 +145,10 @@
     widgetTransparency = 1;
     islandRouteNotificationCenter = "island";
     islandRouteControlCenter = "bar";
+    islandRouteDash = "island";
+    islandRouteMedia = "island";
+    islandRouteWallpaper = "island";
+    islandRouteWeather = "island";
     islandRouteClipboard = "island";
     islandHomeCompactTight = false;
     surfaceColor = "default";
