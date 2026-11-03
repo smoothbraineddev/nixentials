@@ -111,19 +111,21 @@ let
   };
 
   sides = lib.types.attrsOf lib.types.int;
+  inherit ((import ../../lib/dms.nix).bar) islandReserveThickness;
 in
 {
   options.programs.niri.strutToggle = {
     wideStruts = lib.mkOption {
       type = sides;
       default = {
-        right = -25;
+        right = -islandReserveThickness;
       };
       description = ''
         Struts for the wide state, on every output. Sides left out keep
         programs.niri.settings.layout.struts. The dms-settings bar is a notch on the right
-        edge, which has no outer gap, and reserves its islandReserveThickness of 25px. -25
-        gives all of that back, so a window sits one gap from the screen edge.
+        edge, which has no outer gap, and reserves its islandReserveThickness (lib/dms.nix).
+        The negative of that gives all of it back, so a window sits one gap from the screen
+        edge.
       '';
     };
     wideOutputs = lib.mkOption {

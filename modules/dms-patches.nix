@@ -1,7 +1,7 @@
-# Patches the DMS package. The island bar in dms-settings gets smaller gaps between its home
-# groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and
-# weight, its weather icon a fixed size and a small lift, its temperature digits sit on the
-# center line, and its slots open on hover. It also draws the dash metric sparklines behind the
+# Patches the DMS package. The island bar in dms-settings gets its own corner radius, smaller
+# gaps between its home groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and
+# weight, its weather icon a fixed size and a small lift, and its temperature digits sit on
+# the center line. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
 # Click-through desktop widgets move to the background layer, which niri/misc.nix puts in the
 # backdrop.
@@ -14,21 +14,28 @@ let
   # except next to the clock, which has its own gap above (media) and below (weather).
   # islandEdgeGapTop and islandEdgeGapBottom are the space between the first and last group and
   # the island's ends.
-  islandGroupGap = 4;
+  islandGroupGap = 0;
   islandClockGapAbove = 4;
-  islandClockGapBelow = 2;
-  islandEdgeGapTop = 8;
+  islandClockGapBelow = 0;
+  islandEdgeGapTop = 6;
   islandEdgeGapBottom = 6;
+  # Island corners in px: the expanded views, the compact face and the flare where the notch
+  # meets the screen edge. DMS uses Theme.windowRadius for the views and the flare, and a pill
+  # radius for the face, which pillTarget caps at half the island's thickness.
+  islandCornerRadius = 12;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
   islandClockFontSize = 14;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
   # The temperature below it is padded left by the width of its trailing "°", so the digits sit
   # on the center line.
-  islandWeatherIconSize = 20;
+  islandWeatherIconSize = 16;
   # Moves the island's weather icon and temperature up, in px. The groups' boxes are islandGroupGap
   # apart, but the icon's own padding makes the visible gap above it larger than the clock's gaps.
   islandWeatherLift = 0;
+  # Moves the island's temperature right, in px, after the "°" padding has centered its digits.
+  # The Grid centers the padded text, so the padding changes by twice this.
+  islandTempShift = -1;
   # Dash clock card digits. "Google Sans Flex" equals DMS's defaultFontFamily, so DClockFace uses
   # the variable face and sets the weight (dashOptions.clock.weight in dms-settings) through its
   # wght axis. Any other family gets a static face.
@@ -76,41 +83,24 @@ in
             "text: WeatherService.currentTempText()" \
             "text: WeatherService.currentTempText()
                 id: islandTempText
-                leftPadding: degreeMetrics.advanceWidth
+                leftPadding: degreeMetrics.advanceWidth + 2 * ${toString islandTempShift}
 
                 TextMetrics {
                     id: degreeMetrics
                     font: islandTempText.font
                     text: \"°\"
-                }" \
-          --replace-fail \
-            "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)" \
-            "acceptedButtons: group.isTray ? Qt.NoButton : (Qt.LeftButton | Qt.MiddleButton)
-
-                Timer {
-                    running: slotArea.containsMouse && !slotArea.group.isWorkspaces && !slotArea.group.isTray && (!slotArea.group.isMedia || root.controller.mediaAvailable)
-                    interval: root.controller.hoverOpenDelay
-                    onTriggered: {
-                        const groupId = slotArea.group.groupId;
-                        switch (groupId) {
-                        case \"media\":
-                        case \"weather\":
-                            root.controller.requestHoverPeek(groupId);
-                            return;
-                        case \"notifications\":
-                            root.controller.consumeTransientNotification();
-                            root.controller.requestHoverPeek(\"notificationcenter\");
-                            return;
-                        case \"volume\":
-                        case \"brightness\":
-                            root.systemModel.open(groupId);
-                            return;
-                        }
-                        // The control center opens on the section a click last asked for.
-                        root.controller.controlCenterPendingSection = groupId === \"privacy\" ? \"audioInput\" : \"\";
-                        root.controller.requestHoverPeek(\"controlcenter\");
-                    }
                 }"
+
+        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandBarHost.qml \
+          --replace-fail \
+            "cornerRadius: root.connectedChrome ? Theme.connectedSurfaceRadius : Theme.windowRadius" \
+            "cornerRadius: ${toString islandCornerRadius}" \
+          --replace-fail \
+            "pillRadius: BarMetrics.pillRadius(root.compactThickness, root.barConfig?.widgetStyle ?? \"pills\")" \
+            "pillRadius: ${toString islandCornerRadius}" \
+          --replace-fail \
+            "notchRadius: BarMetrics.gothRadius(root.barConfig)" \
+            "notchRadius: ${toString islandCornerRadius}"
 
         # homeSlotMargin pads both ends of the island equally, so it takes the mean of the two edge
         # gaps and the column moves by half their difference. HomeCompact's groupSpacing, now read
@@ -128,36 +118,6 @@ in
 
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: (${toString islandEdgeGapTop} - ${toString islandEdgeGapBottom}) / 2"
-
-        # Hovering an island slot opens what a click on it opens, as a hover peek, the way hybrid
-        # mode peeks the home view. hoverExpanded makes the existing close timer collapse it when
-        # the pointer leaves the island. Without keyboard focus the peek does not take input from
-        # the focused window. A click still opens it pinned with focus. Expanding leaves
-        # mediaPreferred alone, so the island returns to the face picked with a right-click.
-        # Volume and brightness open their slider, which closes on its own timeout. Workspaces and
-        # tray have no view, and the media slot without a player would open the launcher, which
-        # needs focus, so those three stay click-only.
-        substituteInPlace $out/share/quickshell/dms/Modules/DIsland/IslandController.qml \
-          --replace-fail \
-            "    function requestNotificationCenter(shouldToggle) {" \
-            "    function requestHoverPeek(activityId) {
-                if (inputSuspended || !hoverExpandEnabled || expanded)
-                    return false;
-                if (!requestActivity(activityId, true, false))
-                    return false;
-                hoverExpanded = true;
-                return true;
-            }
-
-            function requestNotificationCenter(shouldToggle) {" \
-          --replace-fail \
-            "            slotHoverCount = 0;" \
-            "            slotHoverCount = 0;
-                    // A hover peek whose visuals were still loading must not open after the pointer left.
-                    if (hoverExpanded && !expanded) {
-                        hoverExpanded = false;
-                        clearPendingRequests(\"\");
-                    }"
 
         # ClockContent has no weight property; 0 keeps the global weight for the bar clock.
         substituteInPlace $out/share/quickshell/dms/Widgets/ClockContent.qml \

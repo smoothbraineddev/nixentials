@@ -25,9 +25,9 @@
     innerPadding = 4;
     island = true;
     islandAlongOffset = 0;
-    islandCompactThickness = 36;
+    islandCompactThickness = 32;
     islandDashTabs = false;
-    islandReserveThickness = 25;
+    islandReserveThickness = 28;
     islandFloating = false;
     islandHomeLayout = [
       {
