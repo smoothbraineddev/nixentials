@@ -1,7 +1,7 @@
-# Patches the DMS package for the island bar in dms-settings. The island gets smaller gaps
-# between its home groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and weight, its weather
-# icon a fixed size and a small lift, its temperature digits sit on the center line, and its
-# slots open on hover. It also draws the dash metric sparklines behind the
+# Patches the DMS package. The island bar in dms-settings gets smaller gaps between its home
+# groups and at its ends, and separate gaps around the clock. Its clock gets a fixed size and
+# weight, its weather icon a fixed size and a small lift, its temperature digits sit on the
+# center line, and its slots open on hover. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font. A
 # dash opened from a right-side bar mirrors its overview cards.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
