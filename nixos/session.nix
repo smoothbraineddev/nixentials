@@ -20,12 +20,12 @@
   programs.zsh.enable = true;
   programs.dconf.enable = true;
   programs.niri.enable = true;
-  # Toggling the left strut negative moves windows into the freed space. Without it, niri
-  # leaves them beside the old edge until a focus change refits the view.
+  # Toggling a left or right strut negative moves windows into the freed space. Without it,
+  # niri leaves them beside the old edge until a focus change refits the view.
   nixpkgs.overlays = [
     (final: prev: {
       niri = prev.niri.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [ ../patches/niri-view-follows-left-strut.patch ];
+        patches = (old.patches or [ ]) ++ [ ../patches/niri-view-follows-strut.patch ];
       });
     })
   ];

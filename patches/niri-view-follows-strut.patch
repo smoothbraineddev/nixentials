@@ -1,14 +1,15 @@
 --- a/src/layout/scrolling.rs
 +++ b/src/layout/scrolling.rs
-@@ -318,6 +318,7 @@
+@@ -318,6 +318,8 @@
          options: Rc<Options>,
      ) {
          let working_area = compute_working_area(parent_area, scale, options.layout.struts);
 +        let old_left = self.working_area.loc.x;
++        let old_right = old_left + self.working_area.size.w;
  
          for (column, data) in zip(&mut self.columns, &mut self.data) {
              column.update_config(view_size, working_area, parent_area, scale, options.clone());
-@@ -330,8 +331,27 @@
+@@ -330,8 +332,47 @@
          self.scale = scale;
          self.options = options;
  
@@ -29,6 +30,26 @@
 +                    .map(|(x, _)| x - view_x);
 +                if leftmost.is_some_and(|x| x >= old_left) {
 +                    let target = self.view_offset.target() + grown;
++                    self.animate_view_offset(self.active_column_idx, target);
++                }
++            }
++
++            // The same for a right strut. Columns fill from the left, so the view moves only
++            // when the rightmost column that starts inside the old area ends one gap before
++            // the old right edge, where scrolling right puts it. A short row against the left
++            // edge stays where it is.
++            let grown = working_area.loc.x + working_area.size.w - old_right;
++            if grown > 0. {
++                let view_x = self.target_view_pos();
++                let gaps = self.options.layout.gaps;
++                let rightmost = self
++                    .column_xs(self.data.iter().copied())
++                    .zip(&self.data)
++                    .filter(|(x, _)| *x < view_x + old_right)
++                    .last()
++                    .map(|(x, data)| x + data.width - view_x);
++                if rightmost.is_some_and(|end| end <= old_right && end >= old_right - gaps - 1.) {
++                    let target = self.view_offset.target() - grown;
 +                    self.animate_view_offset(self.active_column_idx, target);
 +                }
 +            }

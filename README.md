@@ -151,10 +151,12 @@ the include moves to the top of the generated config.
 The file is writable and outside the store, so a value edited there applies at once and
 lasts until the next toggle. To keep a value, set it in `programs.niri.strutToggle`.
 
-When the working area grows to the left, niri leaves every column that still fits where it
+When the working area grows on one side, niri leaves every column that still fits where it
 is, so windows stay beside the bar until a focus change. `nixosModules.session` patches
-niri with `patches/niri-view-follows-left-strut.patch`, which moves the view by the growth
-unless a column already reaches past the old edge. The patch is an overlay on `pkgs.niri`,
+niri with `patches/niri-view-follows-strut.patch`, which moves the view by the growth. On
+the left it does so unless a column already reaches past the old edge. On the right it does
+so only when the rightmost column ends one gap before the old edge, because columns fill
+from the left and a short row stays against the left edge. The patch is an overlay on `pkgs.niri`,
 so a host that sets `programs.niri.package` to another package does not get it.
 
 ## DMS niri includes
