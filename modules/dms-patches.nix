@@ -3,6 +3,8 @@
 # weight, its weather icon a fixed size and a small lift, its temperature digits sit on the
 # center line, and its slots open on hover. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
+# Click-through desktop widgets move to the background layer, which niri/misc.nix puts in the
+# backdrop.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
 # update that moves those lines fails the build. Needs the dank-material-shell home module.
 { options, ... }:
@@ -214,6 +216,15 @@ in
             "DClockFace {
                     fontFamily: \"${dashClockFontFamily}\"
                     rounded: false"
+
+        # Click-through desktop widgets go on the background layer, so niri's place-within-backdrop
+        # rule in niri/misc.nix can put them in the backdrop with the wallpaper. On the bottom layer
+        # niri draws them on every workspace and moves them with it. The backdrop takes no input,
+        # so a widget that is not click-through stays on the bottom layer, where it can be dragged.
+        substituteInPlace $out/share/quickshell/dms/Modules/Plugins/DesktopPluginWrapper.qml \
+          --replace-fail \
+            "            return WlrLayer.Bottom;" \
+            "            return root.clickThrough ? WlrLayer.Background : WlrLayer.Bottom;"
       '';
     });
   };

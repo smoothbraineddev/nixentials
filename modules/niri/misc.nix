@@ -17,6 +17,12 @@
         matches = [ { namespace = "^quickshell$"; } ];
         place-within-backdrop = true;
       }
+      # DMS desktop widgets, so they stay with the wallpaper instead of moving with each
+      # workspace. Only click-through ones, which dms-patches puts on the background layer.
+      {
+        matches = [ { namespace = "^dms:desktop-widget:"; } ];
+        place-within-backdrop = true;
+      }
     ];
 
   };
