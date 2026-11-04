@@ -12,6 +12,7 @@
           displayPreferences = [
             "all"
           ];
+          fontFamily = "";
           showAnalogNumbers = false;
           showAnalogSeconds = true;
           showDate = false;
@@ -36,7 +37,7 @@
           format = "short";
           syncPositionAcrossScreens = true;
         };
-        enabled = true;
+        enabled = false;
         id = "lock_date";
         widgetType = "lockDate";
       }
@@ -45,9 +46,9 @@
           displayPreferences = [
             "all"
           ];
-          passwordVisibility = "always";
-          profileVisibility = "never";
-          style = "minimal";
+          passwordVisibility = "typing";
+          profileVisibility = "typing";
+          style = "ring";
           syncPositionAcrossScreens = true;
         };
         enabled = true;
@@ -102,6 +103,7 @@
           displayPreferences = [
             "all"
           ];
+          fontFamily = "";
           showAnalogNumbers = false;
           showAnalogSeconds = true;
           showDate = false;
@@ -126,7 +128,7 @@
           format = "short";
           syncPositionAcrossScreens = true;
         };
-        enabled = true;
+        enabled = false;
         id = "lock_date";
         widgetType = "lockDate";
       }
@@ -135,9 +137,9 @@
           displayPreferences = [
             "all"
           ];
-          passwordVisibility = "always";
-          profileVisibility = "never";
-          style = "minimal";
+          passwordVisibility = "typing";
+          profileVisibility = "typing";
+          style = "ring";
           syncPositionAcrossScreens = true;
         };
         enabled = true;
