@@ -149,7 +149,10 @@ The file therefore repeats each wide output's rendered section with a `layout` a
 the include moves to the top of the generated config.
 
 The file is writable and outside the store, so a value edited there applies at once and
-lasts until the next toggle. To keep a value, set it in `programs.niri.strutToggle`.
+lasts until the next toggle or switch. To keep a value, set it in `programs.niri.strutToggle`.
+On every switch, the home-manager activation writes the file again from the new build for
+the outputs that are wide. Without that step, a wide output would keep the position, mode,
+scale and struts it had when it was toggled.
 
 When the working area grows on one side, niri leaves every column that still fits where it
 is, so windows stay beside the bar until a focus change. `nixosModules.session` patches

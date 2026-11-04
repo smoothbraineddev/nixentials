@@ -64,6 +64,34 @@ let
     lib.concatLines ([ "layout {" ] ++ strutsLines "    " cfg.wideStruts ++ [ "}" ])
   );
 
+  # Writes the sections of the outputs in `wide`, an array, to the override file.
+  writeWide = ''
+    for name in "''${wide[@]}"; do
+      case "$name" in
+    ${caseArms (kdl: "cat ${kdl}")}  esac
+    done > ${overrideFile}
+  '';
+
+  # The override file holds copies of output sections, so after a rebuild it would keep
+  # the old position, mode and scale of every wide output. This writes the sections of the
+  # outputs that are wide again from the new build, and drops outputs that lost their entry.
+  refresh = pkgs.writeShellScript "niri-refresh-struts" (
+    if perOutput then
+      ''
+        wide=()
+        while IFS= read -r name; do
+          wide+=("$name")
+        done < <(sed -n 's/^output "\(.*\)" {$/\1/p' ${overrideFile})
+        ${writeWide}
+      ''
+    else
+      ''
+        if [ -s ${overrideFile} ]; then
+          cat ${wideKdl} > ${overrideFile}
+        fi
+      ''
+  );
+
   # Per output, the toggle flips only the focused output. The override file is the state:
   # an output is wide while the file has a section for it.
   toggle = pkgs.writeShellScriptBin "niri-toggle-strut" (
@@ -86,10 +114,7 @@ let
         done < <(sed -n 's/^output "\(.*\)" {$/\1/p' ${overrideFile})
         [ -n "$found" ] || wide+=("$key")
 
-        for name in "''${wide[@]}"; do
-          case "$name" in
-        ${caseArms (kdl: "cat ${kdl}")}  esac
-        done > ${overrideFile}
+        ${writeWide}
       ''
     else
       ''
@@ -156,6 +181,7 @@ in
     # Create the override empty, so niri watches an existing file from the first toggle on.
     home.activation.niriStrutsOverride = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run touch ${overrideFile}
+      run ${refresh}
     '';
   };
 }
