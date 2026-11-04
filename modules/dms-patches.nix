@@ -4,7 +4,7 @@
 # the center line. It also draws the dash metric sparklines behind the
 # text, polls system stats every 1s with the dash closed too, and sets the dash clock font.
 # Click-through desktop widgets move to the background layer, which niri/misc.nix puts in the
-# backdrop.
+# backdrop. The lock screen wallpaper gets no blur.
 # All of these live in DMS's QML with no setting. The patch uses --replace-fail, so a DMS
 # update that moves those lines fails the build. Needs the dank-material-shell home module.
 { options, ... }:
@@ -40,6 +40,9 @@ let
   # the variable face and sets the weight (dashOptions.clock.weight in dms-settings) through its
   # wght axis. Any other family gets a static face.
   dashClockFontFamily = "Google Sans Flex";
+  # Lock screen wallpaper blur, 0 to 1. DMS uses 0.8. The 40% dark scrim over the wallpaper
+  # (Theme.lockScreenScrimAlpha) stays, so the clock and password field stay readable.
+  lockScreenBlur = 0;
 in
 {
   programs.dank-material-shell = {
@@ -185,6 +188,11 @@ in
           --replace-fail \
             "            return WlrLayer.Bottom;" \
             "            return root.clickThrough ? WlrLayer.Background : WlrLayer.Bottom;"
+
+        substituteInPlace $out/share/quickshell/dms/Common/Theme.qml \
+          --replace-fail \
+            "readonly property real lockScreenBlur: 0.8" \
+            "readonly property real lockScreenBlur: ${toString lockScreenBlur}"
       '';
     });
   };
