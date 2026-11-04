@@ -1,6 +1,7 @@
-# DMS config shipped as data. The dms-settings module sets barConfigs to [ bar ] and
-# dockConfigs to [ dock ], and a consumer replaces each list whole, so this is what a
-# consumer builds its own bars and docks from with `bar // { ... }` and `dock // { ... }`.
+# DMS config shipped as data. The dms-settings module sets barConfigs to [ bar ],
+# dockConfigs to [ dock ] and lockScreenWidgetInstances to lockScreenWidgets, and a
+# consumer replaces each list whole, so this is what a consumer builds its own bars,
+# docks and lock screen from, with `bar // { ... }`, `dock // { ... }` and `map`.
 {
   bar = {
     autoHide = false;
@@ -229,4 +230,123 @@
       }
     ];
   };
+  lockScreenWidgets = [
+    {
+      config = {
+        autoPosition = true;
+        colorMode = "default";
+        customColor = "#ffffff";
+        displayPreferences = [
+          "all"
+        ];
+        fontFamily = "";
+        showAnalogNumbers = false;
+        showAnalogSeconds = true;
+        showDate = false;
+        showDigitalSeconds = false;
+        style = "expressive";
+        syncPositionAcrossScreens = true;
+        transparency = 0;
+        twoTone = true;
+        weight = 0;
+      };
+      enabled = true;
+      id = "lock_clock";
+      widgetType = "desktopClock";
+    }
+    {
+      config = {
+        colorMode = "default";
+        customColor = "#ffffff";
+        displayPreferences = [
+          "all"
+        ];
+        format = "short";
+        syncPositionAcrossScreens = true;
+      };
+      enabled = false;
+      id = "lock_date";
+      widgetType = "lockDate";
+    }
+    {
+      config = {
+        displayPreferences = [
+          "all"
+        ];
+        passwordVisibility = "typing";
+        profileVisibility = "typing";
+        style = "minimal";
+        syncPositionAcrossScreens = true;
+      };
+      enabled = true;
+      id = "lock_auth";
+      widgetType = "lockAuth";
+    }
+    {
+      config = {
+        displayPreferences = [
+          "all"
+        ];
+        mode = 2;
+        syncPositionAcrossScreens = true;
+      };
+      enabled = true;
+      id = "lock_notifications";
+      widgetType = "lockNotifications";
+    }
+    {
+      config = {
+        background = false;
+        displayPreferences = [
+          "all"
+        ];
+        showMediaPlayer = true;
+        showWeather = true;
+        syncPositionAcrossScreens = true;
+      };
+      enabled = true;
+      id = "lock_status";
+      widgetType = "lockStatus";
+    }
+    {
+      config = {
+        displayPreferences = [
+          "all"
+        ];
+        shape = "round";
+        syncPositionAcrossScreens = true;
+      };
+      enabled = false;
+      id = "lock_power";
+      widgetType = "lockPower";
+    }
+  ];
+  # The greeter list as DMS builds it from the lock screen list while greeterFollowLockScreen
+  # is on (greeterWidgetsFromLock in DCommon/Common/settings/SharedSettingsSpec.js): the lock
+  # widgets the greeter can show, then the session picker.
+  greeterWidgets =
+    lockWidgets:
+    builtins.filter (
+      w:
+      builtins.elem w.widgetType [
+        "desktopClock"
+        "lockDate"
+        "lockAuth"
+        "lockStatus"
+        "lockPower"
+      ]
+    ) lockWidgets
+    ++ [
+      {
+        config = {
+          displayPreferences = [
+            "all"
+          ];
+          syncPositionAcrossScreens = true;
+        };
+        enabled = true;
+        id = "greeter_session";
+        widgetType = "greeterSession";
+      }
+    ];
 }

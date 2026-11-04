@@ -27,6 +27,8 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.colors` | The five palettes as data (`smoothbrained`, `beans`, `gruvbox`, `dank16`, `md3`), plus the `hexToRgb` and `stripHash` helpers, for apps wanting decimal or unprefixed hex |
 | `lib.dms.bar` | The island notch bar that `dms-settings` puts on every screen, as data. `barConfigs` is replaced whole, so a consumer builds its own bars with `bar // { ... }` |
 | `lib.dms.dock` | The dock that `dms-settings` puts on every screen, as data. `dockConfigs` is replaced whole too, so a consumer builds its own dock with `dock // { ... }` |
+| `lib.dms.lockScreenWidgets` | The lock screen widgets that `dms-settings` sets, as data. `lockScreenWidgetInstances` is one list, so a consumer swaps or adds widgets with `map` and `++` |
+| `lib.dms.greeterWidgets` | Builds the greeter list from a lock screen list the way DMS does while the greeter follows the lock screen, so a changed lock screen list gives a matching `greeterWidgetInstances` |
 | `lib.niri.cornerRadius` | `r -> { top-left; top-right; bottom-right; bottom-left; }`. All four corners are required by `geometry-corner-radius` |
 | `lib.niri.binds` | Bind groups as data, keyed by section: `overview`, `terminal`, `lock`, `windows`, `focus`, `movement`, `columns`, `monitors`, `workspaces`, `wheel`, `numbered`, `sizing`, `system` and `struts` |
 | `lib.niri.rules` | Window-rule groups as data: `defaults` (rounded corners), `inactive` (85% opacity) and `wezterm` (its column width and opacity) |
