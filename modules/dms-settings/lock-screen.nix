@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   programs.dank-material-shell.settings = lib.mapAttrsRecursive (_: lib.mkDefault) {
-    lockScreenShowPowerActions = true;
+    lockScreenShowPowerActions = false;
     lockBeforeSuspend = true;
     lockScreenWidgetInstances = [
       {
@@ -46,8 +46,8 @@
             "all"
           ];
           passwordVisibility = "always";
-          profileVisibility = "always";
-          style = "expressive";
+          profileVisibility = "never";
+          style = "minimal";
           syncPositionAcrossScreens = true;
         };
         enabled = true;
@@ -88,7 +88,7 @@
           shape = "round";
           syncPositionAcrossScreens = true;
         };
-        enabled = true;
+        enabled = false;
         id = "lock_power";
         widgetType = "lockPower";
       }
@@ -136,8 +136,8 @@
             "all"
           ];
           passwordVisibility = "always";
-          profileVisibility = "always";
-          style = "expressive";
+          profileVisibility = "never";
+          style = "minimal";
           syncPositionAcrossScreens = true;
         };
         enabled = true;
@@ -166,7 +166,7 @@
           shape = "round";
           syncPositionAcrossScreens = true;
         };
-        enabled = true;
+        enabled = false;
         id = "lock_power";
         widgetType = "lockPower";
       }
