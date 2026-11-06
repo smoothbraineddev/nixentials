@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   shared = {
     q = "exit";
@@ -12,6 +12,13 @@ let
   };
 in
 {
+  # The aliases and zsh's fzf-tab preview call these, so the hosts without them get them too.
+  home.packages = with pkgs; [
+    bat
+    cmatrix
+    eza
+  ];
+
   programs.zsh.shellAliases = shared // {
     # Clear, then fastfetch with an empty line above and below, so the logo does not touch
     # the prompt. ./zsh.nix runs it at startup.
