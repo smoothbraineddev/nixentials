@@ -6,7 +6,7 @@
     # Keep in step with settingsConfigVersion in the DMS package
     # (share/quickshell/dms/Common/SettingsData.qml). An older version makes DMS
     # migrate the read-only settings in memory on every start.
-    configVersion = 42;
+    configVersion = 43;
     clockFormat = "24h";
     powerMenuActions = [
       "reboot"

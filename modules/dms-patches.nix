@@ -15,16 +15,16 @@ let
   # islandEdgeGapTop and islandEdgeGapBottom are the space between the first and last group and
   # the island's ends.
   islandGroupGap = 0;
-  islandClockGapAbove = 4;
-  islandClockGapBelow = 0;
-  islandEdgeGapTop = 6;
-  islandEdgeGapBottom = 6;
+  islandClockGapAbove = 2;
+  islandClockGapBelow = 2;
+  islandEdgeGapTop = 8;
+  islandEdgeGapBottom = 5;
   # Island corners in px: the expanded views, the compact face and the flare where the notch
   # meets the screen edge. DMS uses Theme.windowRadius for the views and the flare, and a pill
   # radius for the face, which pillTarget caps at half the island's thickness.
   islandCornerRadius = 12;
   # Island clock and date in px, independent of fontScale (14 is fontSizeMedium at scale 1).
-  islandClockFontSize = 14;
+  islandClockFontSize = 13;
   islandClockFontWeight = 900;
   # Island weather icon in px. DMS sizes it as the text size plus 2, so fontScale 0.85 gives 14.
   # The temperature below it is padded left by the width of its trailing "°", so the digits sit

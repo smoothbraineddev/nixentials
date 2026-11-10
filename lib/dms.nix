@@ -181,6 +181,7 @@
     smartAutoHide = true;
     useOverlayLayer = true;
     editOnRightClick = false;
+    middleClickAction = "close";
     showOnFullscreen = true;
     openOnOverview = true;
     groupByApp = true;
