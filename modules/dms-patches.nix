@@ -15,10 +15,10 @@ let
   # islandEdgeGapTop and islandEdgeGapBottom are the space between the first and last group and
   # the island's ends.
   islandGroupGap = 0;
-  islandClockGapAbove = 2;
-  islandClockGapBelow = 2;
-  islandEdgeGapTop = 8;
-  islandEdgeGapBottom = 5;
+  islandClockGapAbove = 0;
+  islandClockGapBelow = 0;
+  islandEdgeGapTop = 4;
+  islandEdgeGapBottom = 4;
   # Island corners in px: the expanded views, the compact face and the flare where the notch
   # meets the screen edge. DMS uses Theme.windowRadius for the views and the flare, and a pill
   # radius for the face, which pillTarget caps at half the island's thickness.
