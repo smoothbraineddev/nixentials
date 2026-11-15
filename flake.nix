@@ -16,10 +16,20 @@
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Steel plugins for steelix, the `sx` editor (homeModules.steelix).
+    helix-plugins = {
+      url = "github:maxschipper/helix-plugins-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, ... }:
+    {
+      self,
+      nixpkgs,
+      helix-plugins,
+      ...
+    }:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in
@@ -43,6 +53,12 @@
       homeModules = {
         terminal = ./modules/terminal;
         editor = ./modules/editor;
+        steelix = {
+          imports = [
+            helix-plugins.homeManagerModules.default
+            (import ./modules/steelix.nix helix-plugins)
+          ];
+        };
 
         niri-core = ./modules/niri;
 

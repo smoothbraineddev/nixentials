@@ -44,6 +44,7 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.zen.toUserJs` | `lib.firefox.toUserJs` |
 | `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, nix-your-shell (`nix develop`, `nix shell` and `nix-shell` start zsh instead of bash), `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search all of them), `scelp` (the same for the `systemd` plugin), `pull`, `push`, `fetch` and `status` (plain git; bare, in a flake, also the git inputs checked out in `~/Repos` and the repos in `nixentials.extraRepos`; `push REMOTE` too, for the inputs that have that remote; bare `status` colors each remote by its state) |
 | `homeModules.editor` | helix settings, languages, theme |
+| `homeModules.steelix` | `sx`, steelix (Helix with the Steel plugin system) next to the release `hx`, with Grove (a file tree beside the editor), scopeline (breadcrumbs), git-panel, session.hx, oil, who, fresco, smooth-scroll and yank-flash, rainbow brackets and a `beans-dark-rainbow` theme for them. Needs `homeModules.editor` |
 | `homeModules.niri-core` | animations, input, layout, misc, startup, theme, and the strut toggle (see below). No binds, rules or outputs |
 | `homeModules.niri-binds` | Every `lib.niri.binds` group, applied |
 | `homeModules.niri-rules` | Every `lib.niri.rules` group, applied |
@@ -84,8 +85,9 @@ inputs.nixentials = {
 };
 ```
 
-Every `homeModules` output is a plain module, evaluated with your `pkgs`. This flake's
-own `nixpkgs` input exists only so it can check itself.
+Every `homeModules` output is a plain module, evaluated with your `pkgs`, except that
+`homeModules.steelix` takes its plugins from the `helix-plugins` input. Make this flake's
+`nixpkgs` follow yours, and `helix-plugins` builds with it too.
 
 Import the convenience modules if you agree with the defaults:
 
