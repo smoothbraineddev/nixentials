@@ -1,7 +1,7 @@
 # Evaluation warnings for workarounds that wait on upstream, so none of them goes stale. Each
 # list holds the consumer's entries; a rebuild prints a ⚑ warning when an entry needs a look:
-# a package landed, a version moved past a patch or pin, or a pinned input moved. Insecure
-# allowances and disabled features warn on every rebuild, as a standing reminder.
+# a package landed, a version moved past a patch, pin or blocker, or a pinned input moved.
+# Insecure allowances and disabled features warn on every rebuild, as a standing reminder.
 { config, lib, pkgs, ... }:
 let
   cfg = config.nixentials.watchlist;
@@ -36,6 +36,12 @@ in
     drivers = entries "Driver regressions: warns once `pkg` moved past the `broken` version, to re-test." {
       pkg = pkg;
       broken = str;
+      reason = str;
+    };
+    blocked = entries "Features held back by a package, such as a plugin that needs a newer host: warns once `pkg` moved past `version`, to check whether the feature works now." {
+      name = str;
+      pkg = pkg;
+      version = str;
       reason = str;
     };
     overlays = entries "Packages with a local overlay: warns once `pkg` moved past `patched`, to check whether the overlay can go." {
@@ -91,6 +97,18 @@ in
         else
           null
       ) cfg.drivers
+    )
+    ++ keep (
+      map (
+        e:
+        let
+          v = version e.pkg;
+        in
+        if v != null && v != e.version then
+          "⚑ ${e.name} may work now: ${e.pkg.pname} moved ${e.version} → ${v}. Check: ${e.reason}"
+        else
+          null
+      ) cfg.blocked
     )
     ++ keep (
       map (
