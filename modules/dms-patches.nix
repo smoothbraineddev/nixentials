@@ -99,8 +99,8 @@ in
             "cornerRadius: root.connectedChrome ? Theme.connectedSurfaceRadius : Theme.windowRadius" \
             "cornerRadius: ${toString islandCornerRadius}" \
           --replace-fail \
-            "pillRadius: BarMetrics.pillRadius(root.compactThickness, root.barConfig?.widgetStyle ?? \"pills\")" \
-            "pillRadius: ${toString islandCornerRadius}" \
+            "pillRadius: root.setting(\"islandPillShape\") ? root.compactThickness / 2 : BarMetrics.pillRadius(root.compactThickness, root.barConfig?.widgetStyle ?? \"pills\")" \
+            "pillRadius: root.setting(\"islandPillShape\") ? root.compactThickness / 2 : ${toString islandCornerRadius}" \
           --replace-fail \
             "notchRadius: BarMetrics.gothRadius(root.barConfig)" \
             "notchRadius: ${toString islandCornerRadius}"
