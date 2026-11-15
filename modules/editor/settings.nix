@@ -11,6 +11,8 @@
       auto-format = true;
       auto-pairs = true;
       auto-save = true;
+      # Colors the mode in the statusline with ui.statusline.{normal,insert,select}.
+      color-modes = true;
       cursorline = true;
       gutters = [
         "diff"
@@ -33,6 +35,31 @@
       };
       file-picker = {
         hidden = false;
+      };
+      # One per split. Helix's default elements plus the branch, without the file name, which sx
+      # shows in scopeline. Helix pads the mode, selections and position with spaces, but not the
+      # branch, the spinner or the diagnostics, hence the spacers. sx plugins put their own
+      # elements at the front of the right side (session.hx its session name), so the first
+      # spacer follows them. The spinner (LSP progress) sits next to the diagnostics.
+      statusline = {
+        left = [
+          "mode"
+          "version-control"
+          "spacer"
+          "read-only-indicator"
+          "file-modification-indicator"
+        ];
+        center = [ ];
+        right = [
+          "spacer"
+          "spinner"
+          "spacer"
+          "diagnostics"
+          "selections"
+          "register"
+          "position"
+          "file-encoding"
+        ];
       };
       indent-guides = {
         render = true;
