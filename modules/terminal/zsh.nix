@@ -11,6 +11,13 @@
     options = [ "--cmd cd" ];
   };
 
+  # nix develop, nix shell and nix-shell start zsh instead of bash, with the prompt, aliases
+  # and the rest of this config.
+  programs.nix-your-shell = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -97,8 +104,10 @@
         ZLE_RPROMPT_INDENT=0
       ''
 
-      # Startup, as the last lines of .zshrc, after the aliases, so it can run the c alias.
-      (lib.mkOrder 2000 "c")
+      # Startup, as the last lines of .zshrc, after the aliases, so it can run the c alias. Not in
+      # dev shells or over SSH, where only the prompt changes. An if, because c expands to
+      # several commands and `&& c` would only guard the first.
+      (lib.mkOrder 2000 "if [[ -z $IN_NIX_SHELL && -z $SSH_CONNECTION ]]; then c; fi")
     ];
   };
 }

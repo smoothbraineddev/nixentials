@@ -16,6 +16,8 @@ in
       format = "[${l_round}](color_light)$os[${r_arrow}](bg:color_yellow fg:color_light)$directory[${r_arrow}](fg:color_yellow bg:color_aqua)$git_branch$git_status[${r_arrow}](fg:color_aqua bg:color_blue)$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python\${env_var.IN_NIX_SHELL}[${r_arrow}](fg:color_blue bg:color_gray)$direnv$docker_context[${r_arrow}](fg:color_gray) ";
       right_format = "[${l_round}](color_black)$status$hostname\${env_var.VMSHELL_NAME}[${l_arrow}](bg:color_black fg:color_gray)$cmd_duration[${l_arrow}](bg:color_gray fg:color_light)$time[${r_round}](color_light)";
       add_newline = false;
+      # The default 500 ms is too short for a first `rustc --version` in a fresh dev shell.
+      command_timeout = 2000;
 
       line_break.disabled = false;
 
