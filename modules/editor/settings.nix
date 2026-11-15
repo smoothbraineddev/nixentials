@@ -64,6 +64,9 @@
       indent-guides = {
         render = true;
       };
+      # Diagnostics down to hints in full, wrapped under the cursor line. sx also shows hints
+      # after each line, cut off at the pane's edge.
+      inline-diagnostics.cursor-line = "hint";
       lsp = {
         enable = true;
         auto-signature-help = true;
