@@ -34,13 +34,13 @@ This repo is public. It carries no secrets, no host specifics, and no service co
 | `lib.niri.rules` | Window-rule groups as data: `defaults` (rounded corners), `inactive` (85% opacity) and `wezterm` (its column width and opacity) |
 | `lib.niri.allBinds`, `lib.niri.allRules` | Every bind group merged and every rule group concatenated, as `niri-binds` and `niri-rules` apply them |
 | `lib.firefox.prefs.privacy` | Privacy prefs for any Firefox-based browser except Tor Browser, whose own defaults keep its users alike |
-| `lib.firefox.addons` | Add-on IDs by short name: `bitwarden`, `darkreader`, `noscript`, `oledBlackGrey` (a theme), `ublock`, `vimium` |
+| `lib.firefox.addons` | Add-on IDs by short name: `bitwarden`, `clearurls`, `darkreader`, `noscript`, `oledBlackGrey` (a theme), `uaSwitcher` (User-Agent Switcher and Manager), `ublock`, `vimium` |
 | `lib.firefox.extensionPolicies` | `ids -> policies`, the `ExtensionSettings` policy that installs those add-ons from addons.mozilla.org, for wrapFirefox's `extraPolicies` |
 | `lib.firefox.toUserJs`, `lib.firefox.toAutoconfig` | `prefs -> string`, renders an attrset as `user_pref(...)` lines for a profile's `user.js`, or as `pref(...)` lines for the package's autoconfig (`extraPrefs` of wrapFirefox and tor-browser) |
 | `lib.zen.prefs` | The Zen prefs for `user.js` as data, in the groups `core`, `privacy` (`lib.firefox.prefs.privacy`), `layout` and `mods` |
 | `lib.zen.allPrefs` | Every group of `lib.zen.prefs`, merged |
 | `lib.zen.mods` | The Zen mods as `id -> name`, where the id is the directory under `themes/` in `github:zen-browser/theme-store` |
-| `lib.zen.policies` | Enterprise policies for the Zen package, from `lib.firefox.extensionPolicies`: installs uBlock Origin, Bitwarden, Dark Reader and NoScript |
+| `lib.zen.policies` | Enterprise policies for the Zen package, from `lib.firefox.extensionPolicies`: installs uBlock Origin, Bitwarden, ClearURLs, Dark Reader, NoScript, User-Agent Switcher and Manager and Vimium |
 | `lib.zen.toUserJs` | `lib.firefox.toUserJs` |
 | `homeModules.terminal` | wezterm, starship, fastfetch, zsh, nushell, aliases, broot, yazi, nix-your-shell (`nix develop`, `nix shell` and `nix-shell` start zsh instead of bash), `gelp` (the common aliases of oh-my-zsh's git plugin by task, `gelp <fragment>` to search all of them), `scelp` (the same for the `systemd` plugin), `pull`, `push`, `fetch` and `status` (plain git; bare, in a flake, also the git inputs checked out in `~/Repos` and the repos in `nixentials.extraRepos`; `push REMOTE` too, for the inputs that have that remote; bare `status` colors each remote by its state) |
 | `homeModules.editor` | helix settings, languages, theme |

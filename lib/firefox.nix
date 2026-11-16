@@ -36,9 +36,11 @@ in
   # Add-on IDs from the AMO API, by a short name.
   addons = {
     bitwarden = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
+    clearurls = "{74145f27-f039-47ce-a470-a662b129930a}";
     darkreader = "addon@darkreader.org";
     noscript = "{73a6fe31-595d-460b-a920-fcc0f8843232}";
     oledBlackGrey = "{7c598a42-0f22-4dbc-a4c0-9b3d8d7cc6a5}"; # theme
+    uaSwitcher = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}"; # User-Agent Switcher and Manager
     ublock = "uBlock0@raymondhill.net";
     vimium = "{d7742d87-e61d-4b78-b8a1-b469842139fa}";
   };

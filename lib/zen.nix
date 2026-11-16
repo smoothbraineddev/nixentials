@@ -106,9 +106,12 @@ in
     with firefox.addons;
     [
       bitwarden
+      clearurls
       darkreader
       noscript
+      uaSwitcher
       ublock
+      vimium
     ]
   );
 
