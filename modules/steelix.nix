@@ -74,22 +74,13 @@ in
 
     (require "helix/keymaps.scm")
 
-    ; Docked for `sx` alone or with -w/--working-dir; `sx file` shows it only while focused.
-    ; Space E switches between the two for this process. `sx .` opens Helix's own file
-    ; picker before Grove mounts, so open a directory with `sx -w dir`.
+    ; Grove starts hidden and shows only while focused (Space e). Space E docks it for this
+    ; process, and pressing it again hides it. `sx .` opens Helix's own file picker before
+    ; Grove mounts, so open a directory with `sx -w dir`.
     (require "grove/grove.scm")
-    (define (grove-workspace-launch?)
-      (let ([args (cdr (command-line))])
-        (or (null? args)
-            (let loop ([args args])
-              (cond
-                [(null? args) #f]
-                [(equal? (car args) "--") #f]
-                [(or (equal? (car args) "-w") (equal? (car args) "--working-dir")) #t]
-                [else (loop (cdr args))])))))
     ; The rail between the tree and the editor takes the split separator's colors, the editor
     ; background, so the line numbers are the only divider.
-    (grove-start! #:visibility (if (grove-workspace-launch?) 'always 'focused)
+    (grove-start! #:visibility 'focused
                   #:theme (grove-theme #:rail "ui.window"))
 
     ; Built into steelix, not into release hx, whose config.toml would reject the key.
