@@ -6,7 +6,7 @@
     # Keep in step with settingsConfigVersion in the DMS package
     # (share/quickshell/dms/Common/SettingsData.qml). An older version makes DMS
     # migrate the read-only settings in memory on every start.
-    configVersion = 43;
+    configVersion = 44;
     clockFormat = "24h";
     powerMenuActions = [
       "reboot"
@@ -24,5 +24,8 @@
     soundPluggedIn = false;
     touchpadDragLock = true;
     avatarRing = "primary";
+    # Displays: Gamma control, Display assignment
+    nightModeExcludeFullscreen = true;
+    showOnLastDisplay.notifications = true;
   };
 }

@@ -181,6 +181,7 @@
     smartAutoHide = true;
     useOverlayLayer = true;
     editOnRightClick = false;
+    showEditWidgetsInContextMenu = true;
     middleClickAction = "close";
     showOnFullscreen = true;
     openOnOverview = true;
