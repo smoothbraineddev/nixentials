@@ -71,12 +71,17 @@ let
     git push "$@" || result=$?
   '';
 
+  # Bare, it fetches every remote, since bare status compares the branch with each of them.
   fetch = command "fetch" ''
-    git fetch "$@" || result=$?
-    for name in $(linked "$@"); do
-      echo "$name:"
-      git -C "$HOME/Repos/$name" fetch || result=1
-    done
+    if [[ $# -gt 0 ]]; then
+      git fetch "$@" || result=$?
+    else
+      git fetch --all || result=$?
+      for name in $(linked "$@"); do
+        echo "$name:"
+        git -C "$HOME/Repos/$name" fetch --all || result=1
+      done
+    fi
   '';
 
   # git's own -sb colors the local branch green and the remote red whatever their state. Bare,
