@@ -9,6 +9,7 @@
 
       preset-column-widths = [
         { fixed = 369; }
+        { fixed = 420; }
         { fixed = 762; }
         { proportion = 0.20; }
         { proportion = 0.25; }
